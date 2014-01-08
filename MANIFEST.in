@@ -1,0 +1,8 @@
+include README.rst
+include LICENSE
+include _pyjq.pyx
+include _pyjq.c
+include MANIFEST.in
+include devel-requirement.txt
+include test_pyjq.py
+include tox.ini

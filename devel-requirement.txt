@@ -1,0 +1,4 @@
+distribute==0.7.3
+py==1.4.19
+tox==1.6.1
+virtualenv==1.11

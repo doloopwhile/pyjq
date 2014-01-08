@@ -1,0 +1,8 @@
+*.pyc
+/build
+/dist
+/*.so
+*.egg-info
+.tox
+/_jq.c
+/*.c
