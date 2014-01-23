@@ -11,7 +11,7 @@ setup(
     ext_modules=[Extension("_pyjq", ["_pyjq.c"], libraries=["jq"])],
 
     name='pyjq',
-    version='1.0',
+    version='1.1',
     description='Binding for jq JSON processor.',
     long_description=long_description,
     author='OMOTO Kenji',
