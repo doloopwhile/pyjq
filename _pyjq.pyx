@@ -166,7 +166,7 @@ cdef class Script:
     def __dealloc__(self):
         jq_teardown(&self._jq)
 
-    def apply(self, pyobj):
+    def all(self, pyobj):
         "Transform object by jq script, returning all results as list"
         cdef jv value = pyobj_to_jv(pyobj)
         jq_start(self._jq, value, 0)
@@ -180,6 +180,8 @@ cdef class Script:
             else:
                 output.append(jv_to_pyobj(result))
         return output
+
+    apply = all
 
     def first(self, value, default=None):
         """
