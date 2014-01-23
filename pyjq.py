@@ -8,11 +8,13 @@ def compile(script, **kw):
     return _pyjq.Script(script.encode('utf-8'), kw)
 
 
-def apply(script, value, **kw):
+def all(script, value, **kw):
     """
     Transform object by jq script, returning all results as list.
     """
     return compile(script, **kw).apply(value)
+
+apply = all
 
 
 def first(script, value, default=None, **kw):
