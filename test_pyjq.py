@@ -3,6 +3,7 @@ import unittest
 import re
 import pyjq
 import _pyjq
+from mock import patch
 
 
 class TestJq(unittest.TestCase):
@@ -17,7 +18,7 @@ error: syntax error, unexpected '*', expecting $end
 1 compile error''')
 
         with self.assertRaisesRegex(ValueError, expected_message):
-            s = pyjq.compile('**')
+            pyjq.compile('**')
 
     def test_conversion_between_python_object_and_jv(self):
         objects = [
@@ -34,31 +35,79 @@ error: syntax error, unexpected '*', expecting $end
                 'key3': True,
                 'key4': 1,
                 'key5': 1.5,
-                'key6': [None, False, True, 1, 1.5, [None, False, True], {'foo': 'bar'}],
+                'key6': [None, False, True, 1, 1.5,
+                         [None, False, True], {'foo': 'bar'}],
             },
         ]
 
         s = pyjq.compile('.')
         for obj in objects:
-            self.assertEqual([obj], s.apply(obj))
+            self.assertEqual([obj], s.all(obj))
 
     def test_assigning_values(self):
-        self.assertEqual(pyjq.one('$foo', {}, foo='bar'), 'bar')
-        self.assertEqual(pyjq.one('$foo', {}, foo=['bar']), ['bar'])
+        self.assertEqual(pyjq.one('$foo', {}, vars=dict(foo='bar')), 'bar')
+        self.assertEqual(pyjq.one('$foo', {}, vars=dict(foo=['bar'])), ['bar'])
 
+    def test_all(self):
+        self.assertEqual(
+            pyjq.all('.[] | . + $foo', ['val1', 'val2'], vars=dict(foo='bar')),
+            ['val1bar', 'val2bar']
+        )
 
-    def test_apply(self):
-        self.assertEqual(pyjq.apply('. + $foo', 'val', foo='bar'), ['valbar'])
+        self.assertEqual(
+            pyjq.all('. + $foo', 'val', vars=dict(foo='bar')),
+            ['valbar']
+        )
 
     def test_first(self):
-        self.assertEqual(pyjq.first('. + $foo + "1", . + $foo + "2"', 'val', foo='bar'), 'valbar1')
+        self.assertEqual(
+            pyjq.first('.[] | . + $foo', ['val1', 'val2'], vars=dict(foo='bar')),
+            'val1bar'
+        )
 
     def test_one(self):
-        self.assertEqual(pyjq.one('. + $foo', 'val', foo='bar'), 'valbar')
+        self.assertEqual(
+            pyjq.one('. + $foo', 'val', vars=dict(foo='bar')),
+            'valbar'
+        )
 
-        # raise IndexError if there are multiple elements
+        # raise IndexError if got multiple elements
         with self.assertRaises(IndexError):
-            pyjq.one('. + $foo, . + $foo', 'val', foo='bar')
+            pyjq.one('.[]', [1, 2])
+
+        # raise IndexError if got no elements
+        with self.assertRaises(IndexError):
+            pyjq.one('.[]', [])
+
+    def test_url_argument(self):
+        class FakeResponse:
+            def getheader(self, name):
+                return 'application/json;charset=SHIFT_JIS'
+
+            def read(self):
+                return ('["Hello", "世界", "！"]').encode('shift-jis')
+
+        try:
+            import urllib.request
+            del urllib
+        except ImportError:
+            to_patch = 'urllib2.urlopen'
+        else:
+            to_patch = 'urllib.request.urlopen'
+
+        with patch(to_patch, return_value=FakeResponse()):
+            self.assertEqual(
+                pyjq.all('.[] | . + .', url='http://example.com'),
+                ["HelloHello", "世界世界", "！！"]
+            )
+
+        def opener(url):
+            return "[1, 2, 3]"
+
+        self.assertEqual(
+            pyjq.all('.[] | . + .', url='http://example.com', opener=opener),
+            [2, 4, 6]
+        )
 
 
 if __name__ == '__main__':
