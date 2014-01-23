@@ -1,4 +1,5 @@
 import _pyjq
+__all__ = []
 
 
 def compile(script, **kw):
@@ -15,7 +16,6 @@ def all(script, value, **kw):
     return compile(script, **kw).apply(value)
 
 apply = all
-
 
 def first(script, value, default=None, **kw):
     """
