@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import io
-from os.path import join, dirname
 from setuptools import setup
 from distutils.extension import Extension
 
@@ -8,9 +7,8 @@ long_description = io.open('README.rst', encoding='utf-8').read()
 
 setup(
     py_modules=['pyjq'],
-    install_requires=['cython'],
     test_suite='test_pyjq',
-    ext_modules = [Extension("_pyjq", ["_pyjq.c"], libraries=["jq"])],
+    ext_modules=[Extension("_pyjq", ["_pyjq.c"], libraries=["jq"])],
 
     name='pyjq',
     version='1.0',
@@ -29,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: JavaScript',
     ],
 )
-
