@@ -1,9 +1,16 @@
-# coding=utf8
+# encoding: utf8
+from __future__ import unicode_literals
 import unittest
 import re
 import pyjq
 import _pyjq
 from mock import patch
+
+import six
+if six.PY3:
+    import unittest
+else:
+    import unittest2 as unittest
 
 
 class TestJq(unittest.TestCase):
@@ -17,10 +24,11 @@ error: syntax error, unexpected '*', expecting $end
 **
 1 compile error''')
 
-        with self.assertRaisesRegex(ValueError, expected_message):
+        with self.assertRaisesRegexp(ValueError, expected_message):
             pyjq.compile('**')
 
     def test_conversion_between_python_object_and_jv(self):
+        from six import u
         objects = [
             None,
             False,
@@ -85,7 +93,7 @@ error: syntax error, unexpected '*', expecting $end
                 return 'application/json;charset=SHIFT_JIS'
 
             def read(self):
-                return ('["Hello", "世界", "！"]').encode('shift-jis')
+                return '["Hello", "世界", "！"]'.encode('shift-jis')
 
         try:
             import urllib.request
@@ -94,6 +102,7 @@ error: syntax error, unexpected '*', expecting $end
             to_patch = 'urllib2.urlopen'
         else:
             to_patch = 'urllib.request.urlopen'
+        to_patch = 'six.moves.urllib.request.urlopen'
 
         with patch(to_patch, return_value=FakeResponse()):
             self.assertEqual(
