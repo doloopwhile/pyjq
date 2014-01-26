@@ -3,9 +3,7 @@
 Python binding for jq
 """
 
-
-import json
-import warnings
+import six
 
 
 cdef extern from "jv.h":
@@ -111,8 +109,10 @@ cdef object jv_to_pyobj(jv jval):
 
 
 cdef jv pyobj_to_jv(object pyobj):
-    if isinstance(pyobj, str):
+    if isinstance(pyobj, six.text_type):
         pyobj = pyobj.encode('utf-8')
+        return jv_string_sized(pyobj, len(pyobj))
+    elif six.PY2 and isinstance(pyobj, six.binary_type):
         return jv_string_sized(pyobj, len(pyobj))
     elif isinstance(pyobj, bool):
         return jv_bool(pyobj)
@@ -126,7 +126,10 @@ cdef jv pyobj_to_jv(object pyobj):
     elif isinstance(pyobj, dict):
         jval = jv_object()
         for key, value in pyobj.items():
-            if not isinstance(key, str):
+            if isinstance(key, six.string_types):
+                if isinstance(key, six.binary_type):
+                    key = six.text_type(key)
+            else:
                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
         return jval

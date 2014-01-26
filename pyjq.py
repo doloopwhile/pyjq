@@ -1,6 +1,6 @@
 import _pyjq
 import json
-import urllib.request
+from six.moves import urllib
 import re
 __all__ = []
 
@@ -38,27 +38,46 @@ def _get_value(value, url, opener):
     return value
 
 
-def all(script, value=None, *, url=None, opener=None, vars={}):
+def ensure_kwargs_empty(kw):
+    if kw:
+        raise TypeError('Got unexpected keyward argument {}'.format(', '.join(kw)))
+
+
+def all(script, value=None, **kw):
     """
     Transform object by jq script, returning all results as list.
     """
+    url = kw.pop('url', None)
+    vars = kw.pop('vars', {})
+    opener = kw.pop('opener', None)
+    ensure_kwargs_empty(kw)
 
     return compile(script, vars).all(_get_value(value, url, opener))
 
 apply = all
 
 
-def first(script, value=None, *, default=None, url=None, opener=None, vars={}):
+def first(script, value=None, default=None, **kw):
     """
     Transform object by jq script, returning the first result.
     Return default if result is empty.
     """
+    url = kw.pop('url', None)
+    vars = kw.pop('vars', {})
+    opener = kw.pop('opener', None)
+    ensure_kwargs_empty(kw)
+
     return compile(script, vars).first(_get_value(value, url, opener), default)
 
 
-def one(script, value=None, *, url=None, opener=None, vars={}):
+def one(script, value=None, **kw):
     """
     Transform object by jq script, returning the first result.
     Raise ValueError unless results does not include exactly one element.
     """
+    url = kw.pop('url', None)
+    vars = kw.pop('vars', {})
+    opener = kw.pop('opener', None)
+    ensure_kwargs_empty(kw)
+
     return compile(script, vars).one(_get_value(value, url, opener))

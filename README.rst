@@ -12,6 +12,9 @@ pyjq is a Python bindings for jq (http://stedolan.github.io/jq/).
 You can seamlessly call jq script (like regular expression) and process
 plain python data structure.
 
+For your information, https://pypi.python.org/pypi/jq is a also jq
+bindings but different and incompatible with pyjq.
+
 Example
 -------
 
@@ -56,20 +59,6 @@ Limitation
 jq is a JSON Processor. Therefore pyjq is able to process only "JSON
 compatible" data (object made only from str, int, float, list, dict).
 
-Install
--------
-
-As usual:
-
-::
-
-    pip install pyjq
-
-For your information, https://pypi.python.org/pypi/jq is a also jq
-bindings but different and incompatible with pyjq.
-
-Build from source code
-----------------------
 
 Build jq
 ~~~~~~~~
@@ -87,22 +76,12 @@ jq requires following packages:
 These will be installed by your system's package manager (apt, yum, or
 else).
 
-Checkout source code from github:
+Checkout source code from github. Build and install jq:
 
 ::
 
     git clone https://github.com/stedolan/jq
     cd jq
-    git checkout jq-1.3
-
-Where, you can checkout ``master`` branch or newer release than jq-1.3.
-However, author of pyjq have not build with any release other than
-jq-1.3.
-
-Build and install jq:
-
-::
-
     autoreconf -i
     ./configure
     make
@@ -121,14 +100,20 @@ Command to refresh the cache is system specific. In the case Linux Mint
 Install pyjq
 ~~~~~~~~~~~~
 
-*setuptools* and *cython* are required to build and to install this
-module.
-
-You can build and install this module by usual way.
+You can install from PyPI by usual way.
 
 ::
 
+    pip install pyjq
+
+If you would like to build from source,
+you have to generate C source code by *cython* before run ``setup.py``.
+
+::
+
+    cython _pyjq.pyx
     python setup.py install
+
 
 Q&A
 ---
