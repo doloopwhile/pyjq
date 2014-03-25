@@ -12,7 +12,11 @@ else:
     import unittest2 as unittest
 
 
-class TestJq(unittest.TestCase):
+class TestCaseBackwardCompatMixin:
+    def assertRaisesRegex(self, *a, **kw):
+        return self.assertRaisesRegexp(*a, **kw)
+
+class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
     def test_compile_dot(self):
         s = pyjq.compile('.')
         self.assertIsInstance(s, pyjq._Script)
