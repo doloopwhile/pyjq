@@ -6,10 +6,9 @@ from distutils.extension import Extension
 long_description = io.open('README.rst', encoding='utf-8').read()
 
 setup(
-    py_modules=['pyjq'],
     install_requires=['six'],
     test_suite='test_pyjq',
-    ext_modules=[Extension("_pyjq", ["_pyjq.c"], libraries=["jq"])],
+    ext_modules=[Extension("pyjq", ["pyjq.c"], libraries=["jq"])],
 
     name='pyjq',
     version='1.1',
