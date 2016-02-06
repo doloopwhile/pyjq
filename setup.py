@@ -107,7 +107,7 @@ setup(
     cmdclass={
         "build_ext": jq_build_ext,
     },
-    name='pyjq_static',
+    name='pyjq',
     version='1.1',
     description='Binding for jq JSON processor.',
     long_description=long_description,
