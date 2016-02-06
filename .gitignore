@@ -10,3 +10,6 @@
 /*.*.so
 /*.so
 /*.c
+
+# dependencies
+/dependencies/
