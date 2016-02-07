@@ -1,6 +1,8 @@
 pyjq: Binding for jq JSON Processor
 ===================================
 
+[![Build Status](https://travis-ci.org/doloopwhile/pyjq.svg?branch=travis-ci)](https://travis-ci.org/doloopwhile/pyjq)
+
 pyjq is a Python bindings for jq (<http://stedolan.github.io/jq/>).
 
 > jq is like sed for JSON data – you can use it to slice and filter and
