@@ -6,12 +6,6 @@ import pyjq
 import _pyjq
 from mock import patch
 
-import six
-if six.PY3:
-    import unittest
-else:
-    import unittest2 as unittest
-
 
 class TestCaseBackwardCompatMixin:
     def assertRaisesRegex(self, *a, **kw):
@@ -28,7 +22,6 @@ class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
             pyjq.compile('**')
 
     def test_conversion_between_python_object_and_jv(self):
-        from six import u
         objects = [
             None,
             False,
