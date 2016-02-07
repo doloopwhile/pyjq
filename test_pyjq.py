@@ -23,11 +23,7 @@ class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
         self.assertIsInstance(s, _pyjq.Script)
 
     def test_syntax_error(self):
-        expected_message = re.escape('''\
-error: syntax error, unexpected '*', expecting $end
-**
-1 compile error''')
-
+        expected_message = re.escape(r"error: syntax error")
         with self.assertRaisesRegexp(ValueError, expected_message):
             pyjq.compile('**')
 
