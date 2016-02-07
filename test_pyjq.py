@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import unittest
 import re
 import pyjq
+import _pyjq
 from mock import patch
 
 import six
@@ -19,7 +20,7 @@ class TestCaseBackwardCompatMixin:
 class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
     def test_compile_dot(self):
         s = pyjq.compile('.')
-        self.assertIsInstance(s, pyjq._Script)
+        self.assertIsInstance(s, _pyjq.Script)
 
     def test_syntax_error(self):
         expected_message = re.escape('''\
@@ -27,7 +28,7 @@ error: syntax error, unexpected '*', expecting $end
 **
 1 compile error''')
 
-        with self.assertRaisesRegex(ValueError, expected_message):
+        with self.assertRaisesRegexp(ValueError, expected_message):
             pyjq.compile('**')
 
     def test_conversion_between_python_object_and_jv(self):

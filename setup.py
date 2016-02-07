@@ -83,9 +83,9 @@ class jq_build_ext(build_ext):
 
 
 pyjq = Extension(
-    "pyjq",
+    "_pyjq",
     sources=[
-        "pyjq.c"
+        "_pyjq.c"
     ],
     include_dirs=[
         "dependencies/jq-jq-{jq}".format(**DEPENDENCY_VERSIONS)
@@ -97,6 +97,7 @@ pyjq = Extension(
 )
 
 setup(
+    py_modules=['pyjq'],
     install_requires=['six'],
     test_suite='test_pyjq',
     ext_modules=[pyjq],
