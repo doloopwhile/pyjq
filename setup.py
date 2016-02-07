@@ -4,15 +4,11 @@ import os
 import subprocess
 import tarfile
 import shutil
+import sysconfig
 from setuptools import setup
 from distutils.extension import Extension
 from distutils.command.build_ext import build_ext
 
-try:
-    import sysconfig
-except ImportError:
-    # Python 2.6
-    from distutils import sysconfig
 
 DEPENDENCY_VERSIONS = {
     "onig": "5.9.6",
