@@ -68,8 +68,7 @@ class jq_build_ext(build_ext):
         for d in [
             "dependencies/jq-jq-{jq}".format(**DEPENDENCY_VERSIONS),
             "dependencies/onig-{onig}".format(**DEPENDENCY_VERSIONS),
-            "dependencies/onig_install",
-            "build"
+            "dependencies/onig_install"
         ]:
             try:
                 shutil.rmtree(d)

@@ -6,3 +6,4 @@ include MANIFEST.in
 include devel-requirement.txt
 include test_pyjq.py
 include tox.ini
+include dependencies/*.*
