@@ -4,95 +4,87 @@ import os
 import subprocess
 import tarfile
 import shutil
+from os.path import join, dirname, abspath
+
 import sysconfig
 from setuptools import setup
-from distutils.extension import Extension
-from distutils.command.build_ext import build_ext
-
-
-DEPENDENCY_VERSIONS = {
-    "onig": "5.9.6",
-    "jq": "1.5"
-}
+from setuptools.extension import Extension
+from setuptools.command.build_ext import _build_ext
 
 long_description = io.open('README.rst', encoding='utf-8').read()
 
+dependencies_dir_path = join(abspath(dirname(__file__)), "dependencies")
 
-def path_in_dir(relative_path):
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), relative_path))
+onig_tarball_path = join(dependencies_dir_path, "onig-5.9.6.tar.gz")
+onig_install_path = join(dependencies_dir_path, "onig_install")
+onig_source_path = join(dependencies_dir_path, "onig-5.9.6")
+
+jq_tarball_path = join(dependencies_dir_path, "jq-1.5.tar.gz")
+jq_install_path = join(dependencies_dir_path, "jq_install")
+jq_source_path = join(dependencies_dir_path, "jq-jq-1.5")
 
 
-class jq_build_ext(build_ext):
+class build_ext(_build_ext):
     def run(self):
-        self._cleanup()
         self._build_oniguruma()
         self._build_libjq()
-        build_ext.run(self)
+        _build_ext.run(self)
 
     def _build_oniguruma(self):
-        self._handle_tarball("dependencies/onig-{onig}.tar.gz".format(**DEPENDENCY_VERSIONS))
-        os.mkdir("dependencies/onig_install")
+        self._safe_rmtree(onig_install_path)
+        self._safe_rmtree(onig_source_path)
+
+        self._extract_tarball(onig_tarball_path, dependencies_dir_path)
         self._build_lib(
-            lib_dir="dependencies/onig-{onig}".format(**DEPENDENCY_VERSIONS),
+            lib_dir=onig_source_path,
             commands=[
-                ["./configure", "CFLAGS=-fPIC", "--prefix=%s/dependencies/onig_install" % (os.getcwd())],
+                ["./configure", "CFLAGS=-fPIC", "--disable-shared", "--prefix", onig_install_path],
                 ["make"],
                 ["make", "install"],
-            ])
+            ]
+        )
 
     def _build_libjq(self):
-        self._handle_tarball("dependencies/jq-{jq}.tar.gz".format(**DEPENDENCY_VERSIONS))
+        self._safe_rmtree(jq_install_path)
+        self._safe_rmtree(jq_source_path)
+
+        self._extract_tarball(jq_tarball_path, dependencies_dir_path)
         self._build_lib(
-            lib_dir="dependencies/jq-jq-{jq}".format(**DEPENDENCY_VERSIONS),
+            lib_dir=jq_source_path,
             commands=[
                 ["autoreconf", "-i"],
-                ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode", "--with-oniguruma=%s/dependencies/onig_install" % (os.getcwd())],
+                ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode",
+                 "--enable-all-static", "--disable-shared",
+                 "--with-oniguruma=" + onig_install_path, "--prefix", jq_install_path],
                 ["make"],
-            ])
+                ["make", "install"],
+            ]
+        )
 
     def _build_lib(self, lib_dir, commands):
-
         macosx_deployment_target = sysconfig.get_config_var("MACOSX_DEPLOYMENT_TARGET")
         if macosx_deployment_target:
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = macosx_deployment_target
 
-        def run_command(args):
-            print("Executing: %s" % ' '.join(args))
-            subprocess.check_call(args, cwd=lib_dir)
-
         for command in commands:
-            run_command(command)
+            subprocess.check_call(command, cwd=lib_dir)
 
-    def _cleanup(self):
+    def _extract_tarball(self, tarball_path, workdir_path):
+        tarfile.open(tarball_path, "r:gz").extractall(workdir_path)
 
-        for d in [
-            "dependencies/jq-jq-{jq}".format(**DEPENDENCY_VERSIONS),
-            "dependencies/onig-{onig}".format(**DEPENDENCY_VERSIONS),
-            "dependencies/onig_install"
-        ]:
-            try:
-                shutil.rmtree(d)
-            except Exception:
-                pass
-
-    def _handle_tarball(self, tarball_path):
-
-        tarfile.open(tarball_path, "r:gz").extractall(path_in_dir("./dependencies"))
-
+    def _safe_rmtree(self, d):
+        try:
+            shutil.rmtree(d)
+        except OSError:
+            pass
 
 
 pyjq = Extension(
     "_pyjq",
-    sources=[
-        "_pyjq.c"
-    ],
-    include_dirs=[
-        "dependencies/jq-jq-{jq}".format(**DEPENDENCY_VERSIONS)
-    ],
-    extra_objects=[
-        "dependencies/jq-jq-{jq}/.libs/libjq.a".format(**DEPENDENCY_VERSIONS),
-        "dependencies/onig-{onig}/.libs/libonig.a".format(**DEPENDENCY_VERSIONS)
-    ],
+    sources=["_pyjq.c"],
+    include_dirs=["dependencies/jq_install/include"],
+    libraries=["jq", "onig"],
+    library_dirs=["dependencies/jq_install/lib", "dependencies/onig_install/lib"]
 )
 
 setup(
@@ -100,21 +92,15 @@ setup(
     install_requires=['six'],
     test_suite='test_pyjq',
     ext_modules=[pyjq],
-    cmdclass={
-        "build_ext": jq_build_ext,
-    },
+    cmdclass={"build_ext": build_ext},
     name='pyjq',
-    version='1.1',
+    version='2.0.0',
     description='Binding for jq JSON processor.',
     long_description=long_description,
     author='OMOTO Kenji',
     url='http://github.com/doloopwhile/pyjq',
     license='MIT License',
-    package_data={'': [
-        'dependencies/jq-{jq}.tar.gz'.format(**DEPENDENCY_VERSIONS),
-        'dependencies/onig-{onig}.tar.gz'.format(**DEPENDENCY_VERSIONS)
-        ]
-    },
+    package_data={'': [onig_tarball_path, jq_tarball_path]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

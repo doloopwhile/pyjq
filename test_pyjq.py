@@ -2,14 +2,17 @@
 from __future__ import unicode_literals
 import unittest
 import re
+
+from mock import patch
+
 import pyjq
 import _pyjq
-from mock import patch
 
 
 class TestCaseBackwardCompatMixin:
     def assertRaisesRegex(self, *a, **kw):
         return self.assertRaisesRegexp(*a, **kw)
+
 
 class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
     def test_compile_dot(self):

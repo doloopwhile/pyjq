@@ -1,7 +1,10 @@
-import _pyjq
 import json
-from six.moves import urllib
 import re
+
+from six.moves import urllib
+
+import _pyjq
+
 __all__ = []
 
 
