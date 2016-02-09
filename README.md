@@ -33,16 +33,24 @@ Example
     >>> pyjq.first('.parameters[] | {"param_name": .name, "param_type":.type}', data)
     {'param_type': None, 'param_name': 'PKG_TAG_NAME'}
 
+Install
+-------
+
+You can install from PyPI by usual way.
+
+    pip install pyjq
+
 API
 ---
 
 For jq script, [see its manual](http://stedolan.github.io/jq/manual/).
 
-Only four APIs are provided. They are `apply`, `one`, `first`,
+Only four APIs are provided. They are `all`, `one`, `first`,
 `compile`.
 
-`apply(script, value, **kw)`
+`all(script, value, *, url, )`
 :   Transform object by jq script, returning all results as list.
+:   `apply` is an alias of `all`
 
 `first(script, value, default=None, **kw)`
 :   Transform object by jq script, returning the first result. Return
@@ -58,63 +66,30 @@ Only four APIs are provided. They are `apply`, `one`, `first`,
 Limitation
 ----------
 
-jq is a JSON Processor. Therefore pyjq is able to process only "JSON
-compatible" data (object made only from str, int, float, list, dict).
-
-### Build jq
-
-You have to build and install jq library before you build this module.
-
-jq requires following packages:
-
--   Flex
--   Bison
--   GCC
--   Make
--   Autotools
-
-These will be installed by your system's package manager (apt, yum, or
-else).
-
-Checkout source code from github. Build and install jq:
-
-    git clone https://github.com/stedolan/jq
-    cd jq
-    autoreconf -i
-    ./configure
-    make
-    sudo make install
-
-Some system have cached list of dynamic link libraries. In such system,
-library of jq is not loaded and importing python binding fails.
-
-Command to refresh the cache is system specific. In the case Linux Mint
-14:
-
-    ldconfig
-
-### Install pyjq
-
-You can install from PyPI by usual way.
-
-    pip install pyjq
-
-If you would like to build from source, you have to generate C source
-code by *cython* before run `setup.py`.
-
-    cython _pyjq.pyx
-    python setup.py install
+jq is a JSON Processor. Therefore pyjq is able to process only
+"JSON compatible" data (object made only from str, int, float, list, dict).
 
 Q&A
 ---
 
 ### How can I process json string got from API by pyjq?
 
-You should apply `json.loads` in the standard library before pass to
-pyjq.
+You should apply `json.loads` in the standard library before pass to pyjq.
 
 License
 -------
 
 Copyright (c) 2014 OMOTO Kenji. Released under the MIT license. See
 LICENSE for details.
+
+Changes
+-------
+## 2.0.0
+ - Semantic versioning.
+ - Bundle source codes of jq and oniguruma.
+ - Supported Python 3.5.
+ - Dropped support for Python 3.2.
+ - Added `all` method.
+
+## 1.0
+ - First release.
