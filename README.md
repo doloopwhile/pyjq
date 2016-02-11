@@ -45,23 +45,73 @@ API
 
 For jq script, [see its manual](http://stedolan.github.io/jq/manual/).
 
-Only four APIs are provided. They are `all`, `one`, `first`,
-`compile`.
+Only four APIs are provided:
 
-`all(script, value, *, url, )`
-:   Transform object by jq script, returning all results as list.
-:   `apply` is an alias of `all`
+- `all`
+- `first`
+- `one`
+- `compile`
 
-`first(script, value, default=None, **kw)`
-:   Transform object by jq script, returning the first result. Return
-    default if result is empty.
+`all` transforms a value by JSON script and returns all results as a list.
 
-`one(script, value, **kw)`
-:   Transform object by jq script, returning the first result. Raise
-    ValueError unless results does not include exactly one element.
+```
+>>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> pyjq.all('{user, title: .titles[]}', value)
+[{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
+```
 
-`compile(script, **kw)`
-:   Compile a jq script, retuning a script object.
+`all` takes an optional argument `vars`.
+`vars` is a dictonary of predefined variables for `script`.
+The values in `vars` are avaiable in the `script` as a `$key`.
+That is, `vars` works like `--arg` option and `--argjson` option of jq command.
+```
+>>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={"title": "More JQ"})
+[{'user': 'stedolan', 'title': 'More JQ'}]
+```
+
+`all` takes an optional argument `url`.
+If `url` is given, the subject of transformation is got from the `url`.
+
+```
+>> pyjq.all(".[] | .login", url="https://api.github.com/repos/stedolan/jq/contributors") # get all contributors of jq
+['nicowilliams', 'stedolan', 'dtolnay', ...
+```
+
+Additionally, `all` takes an optional argument `opener`.
+The default `opener` will simply download contents by `urllib.request.urlopen` and decode by `json.decode`.
+However, you can customize this behavior using custom `opener`.
+
+`first` is almost some to `all` but it `first` returns the first result of transformation.
+
+```
+>>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> pyjq.all('{user, title: .titles[]}', value)
+[{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
+```
+
+`first` returns `default` when there are no results.
+
+```
+>>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> pyjq.first('.titles[] | select(test("e"))', value) # The first title which is contains "e"
+'JQ Primer'
+```
+
+`first` returns the first result of transformation. It returns `default` when there are no results.
+
+```
+>>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> pyjq.first('.titles[] | select(test("T"))', value, "Third JS") # The first title which is contains "T"
+'Third JS'
+```
+
+`one` do also returns the first result of transformation but raise Exception if there are no results.
+
+```
+>>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> pyjq.one('.titles[] | select(test("T"))', value)
+IndexError: Result of jq is empty
+```
 
 Limitation
 ----------
@@ -84,12 +134,21 @@ LICENSE for details.
 
 Changes
 -------
-## 2.0.0
- - Semantic versioning.
- - Bundle source codes of jq and oniguruma.
- - Supported Python 3.5.
- - Dropped support for Python 3.2.
- - Added `all` method.
 
-## 1.0
- - First release.
+### Header 3
+
+### 2.0.1
+
+- Updated docstring and README.
+
+### 2.0.0
+
+- Semantic versioning.
+- Bundle source codes of jq and oniguruma.
+- Supported Python 3.5.
+- Dropped support for Python 3.2.
+- Aeded `all` method.
+
+### 1.0
+
+- First release.
