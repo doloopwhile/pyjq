@@ -137,14 +137,24 @@ How can I process json string got from API by pyjq?
 You should apply ``json.loads`` in the standard library before pass to
 pyjq.
 
+Author
+------
+
+`OMOTO Kenji <https://github.com/doloopwhile>`__
+
 License
 -------
 
-Copyright (c) 2014 OMOTO Kenji. Released under the MIT license. See
-LICENSE for details.
+Released under the MIT license. See LICENSE for details.
 
 Changes
 -------
+
+2.1.0
+~~~~~
+
+-  API's translate JS object not to ``dict`` but to
+   ``collections.OrderedDict``.
 
 2.0.0
 ~~~~~
@@ -159,4 +169,3 @@ Changes
 ~~~
 
 -  First release.
-
