@@ -3,6 +3,7 @@
 Python binding for jq
 """
 
+from collections import OrderedDict
 import six
 
 
@@ -98,7 +99,7 @@ cdef object jv_to_pyobj(jv jval):
     elif kind == JV_KIND_ARRAY:
         return [jv_to_pyobj(jv_array_get(jv_copy(jval), i)) for i in range(jv_array_length(jv_copy(jval)))]
     elif kind == JV_KIND_OBJECT:
-        adict = {}
+        adict = OrderedDict()
         it = jv_object_iter(jval)
         while jv_object_iter_valid(jval, it):
             k = jv_to_pyobj(jv_object_iter_key(jval, it))
