@@ -14,8 +14,9 @@ def compile(script, vars={}, library_paths=None):
 
     library_paths is an array of strings that defines the module
     search path.  Semantics for these paths are the same as if
-    provided to the jq command-line program's -L switch.  If not
-    provided, JQ's default list will be used.
+    provided to the jq command-line program's -L switch except that ~
+    and $ORIGIN are not expanded.  If not provided, JQ's default list
+    will be used.
     """
 
     return _pyjq.Script(script.encode('utf-8'), vars=vars,
