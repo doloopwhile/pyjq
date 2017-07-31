@@ -8,11 +8,18 @@ import _pyjq
 __all__ = []
 
 
-def compile(script, vars={}):
+def compile(script, vars={}, library_paths=None):
     """
     Compile a jq script, retuning a script object.
+
+    library_paths is an array of strings that defines the module
+    search path.  Semantics for these paths are the same as if
+    provided to the jq command-line program's -L switch.  If not
+    provided, JQ's default list will be used.
     """
-    return _pyjq.Script(script.encode('utf-8'), vars=vars)
+
+    return _pyjq.Script(script.encode('utf-8'), vars=vars,
+                        library_paths=library_paths)
 
 
 def default_opener(url):
