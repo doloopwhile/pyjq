@@ -1,3 +1,0 @@
-We must run ``cython _pyjq.pyx`` before to run ``python setup.py xxx``.
-Of course, ``Cython.Build.cythonize`` enable to automatically compile .pyx to .c
-but it cause bootstrap problem in ``pip install``
