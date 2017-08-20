@@ -3,8 +3,16 @@
 Python binding for jq
 """
 
+import os
+
 from collections import OrderedDict
 import six
+
+class ScriptRuntimeError(Exception):
+    """
+    Exception thrown when a script calls error()
+    """
+    pass
 
 
 cdef extern from "jv.h":
@@ -24,9 +32,15 @@ cdef extern from "jv.h":
 
 
     jv jv_copy(jv)
+
     jv_kind jv_get_kind(jv)
+
     cdef int jv_is_valid(jv x):
         return jv_get_kind(x) != JV_KIND_INVALID
+    jv jv_invalid_get_msg(jv)
+    cdef int jv_invalid_has_msg(jv x):
+        return jv_invalid_has_msg(x)
+
     void jv_free(jv)
 
     jv jv_null()
@@ -44,6 +58,7 @@ cdef extern from "jv.h":
     jv jv_array_append(jv, jv)
 
     jv jv_string_sized(const char*, int)
+    jv jv_dump_string(jv, int) 
 
     jv jv_object()
     jv jv_object_get(jv object, jv key)
@@ -66,6 +81,7 @@ cdef extern from "jv.h":
     void jv_parser_set_buf(jv_parser*, const char*, int, int)
     jv jv_parser_next(jv_parser*)
 
+
 cdef extern from "jq.h":
     ctypedef struct jq_state:
         pass
@@ -73,6 +89,7 @@ cdef extern from "jq.h":
     ctypedef void (*jq_err_cb)(void *, jv)
 
     jq_state *jq_init()
+    void jq_set_attr(jq_state *, jv, jv)
     void jq_teardown(jq_state **)
     bint jq_compile_args(jq_state *, const char* str, jv args)
     void jq_start(jq_state *, jv value, int flags)
@@ -144,12 +161,15 @@ cdef void Script_error_cb(void* x, jv err):
     Script._error_cb(<object>x, err)
 
 
+
+
 cdef class Script:
     'Compiled jq script object'
     cdef object _errors
     cdef jq_state* _jq
 
-    def __init__(self, const char* script, vars={}):
+    def __init__(self, const char* script, vars={},
+                 library_paths=None):
         self._errors = []
         self._jq = jq_init()
         if not self._jq:
@@ -160,6 +180,34 @@ cdef class Script:
             dict(name=k, value=v)
             for k, v in vars.items()
         ])
+
+
+        # Figure out where to find libraries.
+
+        if library_paths is None:
+
+            library_paths = [os.path.expanduser("~/.jq")]
+
+            try:
+                origin = filter(
+                    lambda p: os.access(os.path.join(p, "jq"), os.X_OK),
+                    os.environ["PATH"].split(os.pathsep)
+                )[0]
+                library_paths.extend([
+                    "%s/%s" % (origin, path)
+                    for path in ["../lib/jq", "lib"]
+                ])
+            except IndexError:
+                # If there's no jq binary, don't do anything relative to it.
+                pass
+
+        # This must be initialized even if empty or imports will fail
+        # an assertion in the jq library.
+        jq_set_attr(self._jq,
+                    pyobj_to_jv("JQ_LIBRARY_PATH"),
+                    pyobj_to_jv(library_paths)
+        )
+
 
         if not jq_compile_args(self._jq, script, args):
             raise ValueError("\n".join(self._errors))
@@ -179,10 +227,23 @@ cdef class Script:
         while True:
             result = jq_next(self._jq)
             if not jv_is_valid(result):
+
+                if jv_invalid_has_msg(jv_copy(result)):
+                    # TODO: Would be nice to add the position in the script.
+                    jv_message = jv_invalid_get_msg(jv_copy(result))
+                    if jv_get_kind(jv_message) == JV_KIND_STRING:
+                        message = jv_string_value(jv_message)
+                    else:
+                        message = jv_string_value(jv_dump_string(jv_message,0))
+                    jv_free(jv_message)
+                    jv_free(result)
+                    raise ScriptRuntimeError(message)
+
                 jv_free(result)
                 break
             else:
                 output.append(jv_to_pyobj(result))
+
         return output
 
     apply = all
