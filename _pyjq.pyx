@@ -168,8 +168,7 @@ cdef class Script:
     cdef object _errors
     cdef jq_state* _jq
 
-    def __init__(self, const char* script, vars={},
-                 library_paths=None):
+    def __init__(self, const char* script, vars={}, library_paths=[]):
         self._errors = []
         self._jq = jq_init()
         if not self._jq:
@@ -181,33 +180,11 @@ cdef class Script:
             for k, v in vars.items()
         ])
 
-
-        # Figure out where to find libraries.
-
-        if library_paths is None:
-
-            library_paths = [os.path.expanduser("~/.jq")]
-
-            try:
-                origin = filter(
-                    lambda p: os.access(os.path.join(p, "jq"), os.X_OK),
-                    os.environ["PATH"].split(os.pathsep)
-                )[0]
-                library_paths.extend([
-                    "%s/%s" % (origin, path)
-                    for path in ["../lib/jq", "lib"]
-                ])
-            except IndexError:
-                # If there's no jq binary, don't do anything relative to it.
-                pass
-
-        # This must be initialized even if empty or imports will fail
-        # an assertion in the jq library.
-        jq_set_attr(self._jq,
-                    pyobj_to_jv("JQ_LIBRARY_PATH"),
-                    pyobj_to_jv(library_paths)
+        jq_set_attr(
+            self._jq,
+            pyobj_to_jv("JQ_LIBRARY_PATH"),
+            pyobj_to_jv(library_paths)
         )
-
 
         if not jq_compile_args(self._jq, script, args):
             raise ValueError("\n".join(self._errors))

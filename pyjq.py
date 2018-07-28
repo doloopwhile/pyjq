@@ -8,15 +8,11 @@ import _pyjq
 __all__ = []
 
 
-def compile(script, vars={}, library_paths=None):
+def compile(script, vars={}, library_paths=[]):
     """
     Compile a jq script, retuning a script object.
 
-    library_paths is an array of strings that defines the module
-    search path.  Semantics for these paths are the same as if
-    provided to the jq command-line program's -L switch except that ~
-    and $ORIGIN are not expanded.  If not provided, JQ's default list
-    will be used.
+    library_paths is a list of strings that defines the module search path.
     """
 
     return _pyjq.Script(script.encode('utf-8'), vars=vars,
@@ -24,8 +20,6 @@ def compile(script, vars={}, library_paths=None):
 
 
 def default_opener(url):
-    """
-    """
     res = urllib.request.urlopen(url)
     content_type = res.getheader('Content-Type')
 
@@ -48,14 +42,14 @@ def _get_value(value, url, opener):
     return value
 
 
-def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=None):
+def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
     """
     Transform value by script, returning all results as list.
     """
     return compile(script, vars, library_paths).all(_get_value(value, url, opener))
 
 
-def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=None):
+def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
     """
     Transform value by script, returning all results as list.
     """
@@ -64,7 +58,7 @@ def apply(script, value=None, vars={}, url=None, opener=default_opener, library_
 apply.__doc__ = all.__doc__
 
 
-def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=None):
+def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=[]):
     """
     Transform object by jq script, returning the first result.
     Return default if result is empty.
@@ -72,7 +66,7 @@ def first(script, value=None, default=None, vars={}, url=None, opener=default_op
     return compile(script, vars, library_paths).first(_get_value(value, url, opener), default)
 
 
-def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=None):
+def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
     """
     Transform object by jq script, returning the first result.
     Raise ValueError unless results does not include exactly one element.
