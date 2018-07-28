@@ -34,12 +34,8 @@ cdef extern from "jv.h":
     jv jv_copy(jv)
 
     jv_kind jv_get_kind(jv)
-
-    cdef int jv_is_valid(jv x):
-        return jv_get_kind(x) != JV_KIND_INVALID
     jv jv_invalid_get_msg(jv)
-    cdef int jv_invalid_has_msg(jv x):
-        return jv_invalid_has_msg(x)
+    int jv_invalid_has_msg(jv)
 
     void jv_free(jv)
 
@@ -203,24 +199,18 @@ cdef class Script:
 
         while True:
             result = jq_next(self._jq)
-            if not jv_is_valid(result):
-
-                if jv_invalid_has_msg(jv_copy(result)):
-                    # TODO: Would be nice to add the position in the script.
-                    jv_message = jv_invalid_get_msg(jv_copy(result))
-                    if jv_get_kind(jv_message) == JV_KIND_STRING:
-                        message = jv_string_value(jv_message)
-                    else:
-                        message = jv_string_value(jv_dump_string(jv_message,0))
-                    jv_free(jv_message)
-                    jv_free(result)
-                    raise ScriptRuntimeError(message)
-
+            try:
+                kind = jv_get_kind(result)
+                if kind == JV_KIND_INVALID:
+                    if not jv_invalid_has_msg(jv_copy(result)):
+                        break
+                    m = jv_invalid_get_msg(jv_copy(result))
+                    e = str(jv_to_pyobj(m))
+                    raise ScriptRuntimeError(e)
+                else:
+                    output.append(jv_to_pyobj(result))
+            finally:
                 jv_free(result)
-                break
-            else:
-                output.append(jv_to_pyobj(result))
-
         return output
 
     apply = all
