@@ -4,6 +4,10 @@ import unittest
 import re
 
 from mock import patch
+import tempfile
+import shutil
+import os.path
+import io
 
 import pyjq
 import _pyjq
@@ -113,7 +117,32 @@ class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
             pyjq.all('.[] | . + .', url='http://example.com', opener=opener),
             [2, 4, 6]
         )
+        
+    def test_library_path(self):
+        library_path = tempfile.mkdtemp()
+        library_path2 = tempfile.mkdtemp()
+        
+        library_file = os.path.join(library_path, "greeting.jq")
+        library_file2 = os.path.join(library_path2, "increment.jq")
 
+        try:
+            with io.open(library_file, 'w', encoding='ascii') as f:
+                f.write('def hello: "HELLO";')
+                f.write('def world: "WORLD";')
+            with io.open(library_file2, 'w', encoding='ascii') as f:
+                f.write('def increment: . + 1;\n')
+            values = pyjq.all(
+                'include "greeting"; include "increment"; .[] | [. | increment, hello, world]',
+                [1, 2, 3],
+                library_paths = [library_path, library_path2]
+            )
+            self.assertEquals(
+                [[2, "HELLO", "WORLD"], [3, "HELLO", "WORLD"], [4, "HELLO", "WORLD"]],
+                values
+            )
+        finally:
+            shutil.rmtree(library_path)
+            shutil.rmtree(library_path2)
 
 if __name__ == '__main__':
     unittest.main()
