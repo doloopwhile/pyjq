@@ -36,6 +36,8 @@ Example
 Install
 -------
 
+It requires build tools such as make, automake, libtool, etc...
+
 You can install from PyPI by usual way.
 
     pip install pyjq
