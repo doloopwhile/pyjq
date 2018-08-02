@@ -3,10 +3,19 @@
 Python binding for jq
 """
 
-import os
+from cpython.ref cimport PyObject
+import sys
 
-from collections import OrderedDict
+version = sys.version_info
+# dicts are insertion-ordered as a language feature in 3.7
+# and as an implementation detail in CPython 3.6
+if version >= (3, 7) or (version >= (3, 6) and sys.implementation.name == 'cpython'):
+    OrderedDict = dict
+else:
+    from collections import OrderedDict
+
 import six
+
 
 class ScriptRuntimeError(Exception):
     """
@@ -14,22 +23,20 @@ class ScriptRuntimeError(Exception):
     """
     pass
 
-
 cdef extern from "jv.h":
     ctypedef struct jv:
         pass
-    const char* jv_string_value(jv)
+    const char*jv_string_value(jv)
 
     ctypedef enum jv_kind:
-      JV_KIND_INVALID,
-      JV_KIND_NULL,
-      JV_KIND_FALSE,
-      JV_KIND_TRUE,
-      JV_KIND_NUMBER,
-      JV_KIND_STRING,
-      JV_KIND_ARRAY,
-      JV_KIND_OBJECT
-
+        JV_KIND_INVALID,
+        JV_KIND_NULL,
+        JV_KIND_FALSE,
+        JV_KIND_TRUE,
+        JV_KIND_NUMBER,
+        JV_KIND_STRING,
+        JV_KIND_ARRAY,
+        JV_KIND_OBJECT
 
     jv jv_copy(jv)
 
@@ -54,7 +61,7 @@ cdef extern from "jv.h":
     jv jv_array_append(jv, jv)
 
     jv jv_string_sized(const char*, int)
-    jv jv_dump_string(jv, int) 
+    jv jv_dump_string(jv, int)
 
     jv jv_object()
     jv jv_object_get(jv object, jv key)
@@ -67,12 +74,12 @@ cdef extern from "jv.h":
     jv jv_object_iter_value(jv, int)
 
     ctypedef enum jv_parser_flags:
-      JV_PARSE_EXPLODE_TOPLEVEL_ARRAY
+        JV_PARSE_EXPLODE_TOPLEVEL_ARRAY
 
     cdef struct jv_parser:
         pass
 
-    jv_parser* jv_parser_new(jv_parser_flags)
+    jv_parser*jv_parser_new(jv_parser_flags)
     void jv_parser_free(jv_parser*)
     void jv_parser_set_buf(jv_parser*, const char*, int, int)
     jv jv_parser_next(jv_parser*)
@@ -87,7 +94,7 @@ cdef extern from "jq.h":
     jq_state *jq_init()
     void jq_set_attr(jq_state *, jv, jv)
     void jq_teardown(jq_state **)
-    bint jq_compile_args(jq_state *, const char* str, jv args)
+    bint jq_compile_args(jq_state *, const char*str, jv args)
     void jq_start(jq_state *, jv value, int flags)
     jv jq_next(jq_state *)
     void jq_set_error_cb(jq_state *, jq_err_cb, void *)
@@ -121,8 +128,7 @@ cdef object jv_to_pyobj(jv jval):
             it = jv_object_iter_next(jval, it)
         return adict
 
-
-cdef jv pyobj_to_jv(object pyobj):
+cdef jv pyobj_to_jv(object pyobj, void*custom_encoder=NULL):
     if isinstance(pyobj, six.text_type):
         pyobj = pyobj.encode('utf-8')
         return jv_string_sized(pyobj, len(pyobj))
@@ -135,7 +141,7 @@ cdef jv pyobj_to_jv(object pyobj):
     elif isinstance(pyobj, (list, tuple)):
         jval = jv_array()
         for i, item in enumerate(pyobj):
-            jval = jv_array_append(jval, pyobj_to_jv(item))
+            jval = jv_array_append(jval, pyobj_to_jv(item, custom_encoder))
         return jval
     elif isinstance(pyobj, dict):
         jval = jv_object()
@@ -145,31 +151,36 @@ cdef jv pyobj_to_jv(object pyobj):
                     key = six.text_type(key)
             else:
                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
-            jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
+            jval = jv_object_set(jval, pyobj_to_jv(key, custom_encoder), pyobj_to_jv(value, custom_encoder))
         return jval
     elif pyobj is None:
         return jv_null()
     else:
-        raise TypeError("{!r} could not be converted to json".format(type(pyobj)))
+        if custom_encoder != NULL:
+            return pyobj_to_jv((<object>custom_encoder)(pyobj))
+        raise TypeError("{!r} could not be converted to json!!".format(type(pyobj)))
 
+cdef void Script_error_cb(void*x, jv err):
+    Script._error_cb(<object> x, err)
 
-cdef void Script_error_cb(void* x, jv err):
-    Script._error_cb(<object>x, err)
-
-
-
+ctypedef object (*py_function)(object)
 
 cdef class Script:
     'Compiled jq script object'
     cdef object _errors
-    cdef jq_state* _jq
+    cdef jq_state*_jq
+    cdef PyObject* _custom_encoder
 
-    def __init__(self, const char* script, vars={}, library_paths=[]):
+    def __init__(self, const char*script, vars={}, library_paths=[], custom_encoder=None):
         self._errors = []
         self._jq = jq_init()
+
+        if custom_encoder is not None:
+            self._custom_encoder = <PyObject*>custom_encoder
+
         if not self._jq:
             raise RuntimeError('Failed to initialize jq')
-        jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
+        jq_set_error_cb(self._jq, Script_error_cb, <void*> self)
 
         args = pyobj_to_jv([
             dict(name=k, value=v)
@@ -193,7 +204,7 @@ cdef class Script:
 
     def all(self, pyobj):
         "Transform object by jq script, returning all results as list"
-        cdef jv value = pyobj_to_jv(pyobj)
+        cdef jv value = pyobj_to_jv(pyobj, custom_encoder=self._custom_encoder)
         jq_start(self._jq, value, 0)
         cdef list output = []
 
