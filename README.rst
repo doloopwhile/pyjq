@@ -36,6 +36,8 @@ Example
 Install
 -------
 
+It requires build tools such as make, automake, libtool, etc...
+
 You can install from PyPI by usual way.
 
 ::
@@ -128,6 +130,27 @@ Limitation
 jq is a JSON Processor. Therefore pyjq is able to process only "JSON
 compatible" data (object made only from str, int, float, list, dict).
 
+To avoid this "Limitation" you could pass the "custom\_encoder" function
+which will pre-process "unsupported types"
+
+Example:
+
+::
+
+    >>> import pyjq
+    >>> import datetime
+    >>> 
+    >>> def c_encoder(value):
+    ...     if isinstance(value, datetime.datetime):
+    ...         return value.timestamp()
+    ...     return value
+    >>> 
+    >>> pyjq.one(".", {"now": datetime.datetime.now()}, custom_encoder=c_encoder)
+    {'now': 1533283952.956293}
+    >>> compiled_jq = pyjq.compile(".", custom_encoder=c_encoder)
+    >>> compiled_jq.one({"now": datetime.datetime.now()})
+    {'now': 1533284075.547344}
+
 Q&A
 ---
 
@@ -146,6 +169,22 @@ License
 -------
 
 Released under the MIT license. See LICENSE for details.
+
+Development
+-----------
+
+We DO commit ``_pyjq.c``
+------------------------
+
+When you edit ``_pyjq.pyx``, you need to run ``cython _pyjq.pyx`` before
+to run ``python setup.py develop``. It is because ``setup.py`` in this
+project does not compile .pyx to .c.
+
+Of course, we can use ``Cython.Build.cythonize`` in setup.py to
+automatically compile .pyx to .c . But, it cause bootstrap problem in
+``pip install``.
+
+So, we DO commit both of ``_pyjq.pyx`` and ``_pyjq.c``.
 
 Changes
 -------
