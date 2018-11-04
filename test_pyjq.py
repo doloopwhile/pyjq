@@ -10,7 +10,6 @@ import os.path
 import io
 
 import pyjq
-import _pyjq
 
 
 class TestCaseBackwardCompatMixin:
@@ -21,7 +20,7 @@ class TestCaseBackwardCompatMixin:
 class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
     def test_compile_dot(self):
         s = pyjq.compile('.')
-        self.assertIsInstance(s, _pyjq.Script)
+        self.assertIsInstance(s, pyjq.Script)
 
     def test_syntax_error(self):
         expected_message = re.escape(r"error: syntax error")

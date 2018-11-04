@@ -5,6 +5,7 @@ import subprocess
 import tarfile
 import shutil
 from os.path import join, dirname, abspath
+import platform
 
 import sysconfig
 from setuptools import setup
@@ -56,8 +57,7 @@ class build_ext(_build_ext):
                 ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode",
                  "--enable-all-static", "--disable-shared",
                  "--with-oniguruma=" + onig_install_path, "--prefix", jq_install_path],
-                ["make"],
-                ["make", "install"],
+                ["make", "install-libLTLIBRARIES", "install-includeHEADERS"],
             ]
         )
 
@@ -78,29 +78,35 @@ class build_ext(_build_ext):
         except OSError:
             pass
 
+libraries = ["jq", "onig"]
+if platform.architecture()[1].startswith('Windows'):
+    libraries.append("shlwapi")
 
 pyjq = Extension(
-    "_pyjq",
-    sources=["_pyjq.c"],
+    "pyjq",
+    sources=["pyjq.c"],
     include_dirs=["dependencies/jq_install/include"],
-    libraries=["jq", "onig"],
+    libraries=libraries,
     library_dirs=["dependencies/jq_install/lib", "dependencies/onig_install/lib"]
 )
 
 setup(
-    py_modules=['pyjq'],
-    install_requires=['six'],
+    name='pyjq',
+    version='2.2.0',
+
+    # py_modules=['pyjq'],
     test_suite='test_pyjq',
     ext_modules=[pyjq],
     cmdclass={"build_ext": build_ext},
-    name='pyjq',
-    version='2.2.0',
+    package_data={'': [onig_tarball_path, jq_tarball_path]},
+
+    install_requires=['six'],
+
     description='Binding for jq JSON processor.',
     long_description=long_description,
     author='OMOTO Kenji',
     url='http://github.com/doloopwhile/pyjq',
     license='MIT License',
-    package_data={'': [onig_tarball_path, jq_tarball_path]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
