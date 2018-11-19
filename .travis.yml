@@ -5,13 +5,23 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-
-env:
-
-before_script:
+  - "3.6"
+  - "3.7"
 
 install:
   - "python setup.py install"
 
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env: PIP=pip
+    - os: osx
+      language: generic
+      env: PIP=pip2
+
 script:
   - "python setup.py test"
+  - $PIP install cibuildwheel==0.10.0
+  - cibuildwheel --output-dir wheelhouse
