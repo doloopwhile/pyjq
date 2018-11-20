@@ -1,0 +1,59 @@
+version: 2
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test27
+      - test35
+      - test36
+      - test37
+
+_test-body: &test-body
+  steps:
+    - checkout
+    - run:
+        name: install dependencies
+        command: |
+          python -m venv venv
+          . venv/bin/activate
+          python setup.py install
+          pip install -r devel-requirements.txt
+    - run:
+        name: run tests
+        command: |
+          . venv/bin/activate
+          python setup.py test
+
+jobs:
+  test27:
+    <<: *test-body
+    docker:
+      - image: circleci/python:2.7
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            python -m virtualenv venv
+            . venv/bin/activate
+            python setup.py install
+            pip install -r devel-requirements.txt
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            python setup.py test
+  test35:
+    <<: *test-body
+    docker:
+      - image: circleci/python:3.5
+  test36:
+    <<: *test-body
+    docker:
+      - image: circleci/python:3.6
+  test37:
+    <<: *test-body
+    docker:
+      - image: circleci/python:3.7
+
