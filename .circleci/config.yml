@@ -9,51 +9,62 @@ workflows:
       - test36
       - test37
 
-_test-body: &test-body
-  steps:
-    - checkout
-    - run:
-        name: install dependencies
-        command: |
-          python -m venv venv
-          . venv/bin/activate
-          python setup.py install
-          pip install -r devel-requirements.txt
-    - run:
-        name: run tests
-        command: |
-          . venv/bin/activate
-          python setup.py test
+_test-body:
+  - &_dep
+    run:
+      name: install dependencies
+      command: |
+        . venv/bin/activate
+        python setup.py install
+        pip install -r devel-requirements.txt
+  - &_test
+    run:
+      name: run tests
+      command: |
+        . venv/bin/activate
+        python test_pyjq.py
 
 jobs:
   test27:
-    <<: *test-body
     docker:
       - image: circleci/python:2.7
     steps:
       - checkout
       - run:
-          name: install dependencies
-          command: |
-            python -m virtualenv venv
-            . venv/bin/activate
-            python setup.py install
-            pip install -r devel-requirements.txt
-      - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            python setup.py test
+          name: create venv
+          command: python -m virtualenv venv
+      - *_dep
+      - *_test
+
   test35:
-    <<: *test-body
     docker:
       - image: circleci/python:3.5
+    steps: &_py3_steps
+      - checkout
+      - run:
+          name: create venv
+          command: python -m venv venv
+      - *_dep
+      - *_test
+
   test36:
-    <<: *test-body
     docker:
       - image: circleci/python:3.6
+    steps:
+      - checkout
+      - run:
+          name: create venv
+          command: python -m venv venv
+      - *_dep
+      - *_test
+
   test37:
-    <<: *test-body
     docker:
       - image: circleci/python:3.7
-
+    steps:
+      - checkout
+      - run:
+          name: create venv
+          command: python -m venv venv
+      - *_dep
+      - *_test
