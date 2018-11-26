@@ -1,7 +1,7 @@
 pyjq: Binding for jq JSON Processor
 ===================================
 
-[![Build Status](https://travis-ci.org/doloopwhile/pyjq.svg?branch=travis-ci)](https://travis-ci.org/doloopwhile/pyjq)
+[![CircleCI](https://circleci.com/gh/doloopwhile/pyjq.svg?style=svg)](https://circleci.com/gh/doloopwhile/pyjq)
 
 pyjq is a Python bindings for jq (<http://stedolan.github.io/jq/>).
 
