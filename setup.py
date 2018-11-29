@@ -5,6 +5,7 @@ import subprocess
 import tarfile
 import shutil
 from os.path import join, dirname, abspath
+import platform
 
 import sysconfig
 from setuptools import setup
@@ -15,9 +16,9 @@ long_description = io.open('README.rst', encoding='utf-8').read()
 
 dependencies_dir_path = join(abspath(dirname(__file__)), "dependencies")
 
-onig_tarball_path = join(dependencies_dir_path, "onig-5.9.6.tar.gz")
+onig_tarball_path = join(dependencies_dir_path, "onig-6.9.0.tar.gz")
 onig_install_path = join(dependencies_dir_path, "onig_install")
-onig_source_path = join(dependencies_dir_path, "onig-5.9.6")
+onig_source_path = join(dependencies_dir_path, "onig-6.9.0")
 
 jq_tarball_path = join(dependencies_dir_path, "jq-1.5.tar.gz")
 jq_install_path = join(dependencies_dir_path, "jq_install")
@@ -56,8 +57,7 @@ class build_ext(_build_ext):
                 ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode",
                  "--enable-all-static", "--disable-shared",
                  "--with-oniguruma=" + onig_install_path, "--prefix", jq_install_path],
-                ["make"],
-                ["make", "install"],
+                ["make", "install-libLTLIBRARIES", "install-includeHEADERS"],
             ]
         )
 
@@ -78,12 +78,15 @@ class build_ext(_build_ext):
         except OSError:
             pass
 
+libraries = ["jq", "onig"]
+if platform.architecture()[1] == 'WindowsPE':
+    libraries.append("shlwapi")
 
 pyjq = Extension(
     "_pyjq",
     sources=["_pyjq.c"],
     include_dirs=["dependencies/jq_install/include"],
-    libraries=["jq", "onig"],
+    libraries=libraries,
     library_dirs=["dependencies/jq_install/lib", "dependencies/onig_install/lib"]
 )
 
