@@ -155,6 +155,14 @@ So, we DO commit both of `_pyjq.pyx` and `_pyjq.c`.
 Changes
 -------
 
+### 2.3.0
+
+- Supported installing in msys.
+
+### 2.2.0
+
+- Added `library_paths` argument to functions.
+
 ### 2.1.0
 
 - API's translate JS object not to `dict` but to `collections.OrderedDict`.
