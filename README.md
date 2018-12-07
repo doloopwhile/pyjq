@@ -155,6 +155,10 @@ So, we DO commit both of `_pyjq.pyx` and `_pyjq.c`.
 Changes
 -------
 
+### 2.3.1
+
+- Updated README
+
 ### 2.3.0
 
 - Supported installing in msys.
