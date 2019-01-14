@@ -20,7 +20,7 @@ bindings but different and incompatible with pyjq.
 Example
 -------
 
-::
+.. code:: python
 
     >>> data = dict(
     ...     parameters= [
@@ -62,7 +62,7 @@ Only four APIs are provided:
 ``all`` transforms a value by JSON script and returns all results as a
 list.
 
-::
+.. code:: python
 
     >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
     >>> pyjq.all('{user, title: .titles[]}', value)
@@ -73,7 +73,7 @@ predefined variables for ``script``. The values in ``vars`` are avaiable
 in the ``script`` as a ``$key``. That is, ``vars`` works like ``--arg``
 option and ``--argjson`` option of jq command.
 
-::
+.. code:: python
 
     >>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={"title": "More JQ"})
     [{'user': 'stedolan', 'title': 'More JQ'}]
@@ -81,10 +81,10 @@ option and ``--argjson`` option of jq command.
 ``all`` takes an optional argument ``url``. If ``url`` is given, the
 subject of transformation is got from the ``url``.
 
-::
+.. code:: python
 
     >> pyjq.all(".[] | .login", url="https://api.github.com/repos/stedolan/jq/contributors") # get all contributors of jq
-    ['nicowilliams', 'stedolan', 'dtolnay', ...
+    ['nicowilliams', 'stedolan', 'dtolnay', ... ]
 
 Additionally, ``all`` takes an optional argument ``opener``. The default
 ``opener`` will simply download contents by ``urllib.request.urlopen``
@@ -94,7 +94,7 @@ using custom ``opener``.
 ``first`` is almost some to ``all`` but it ``first`` returns the first
 result of transformation.
 
-::
+.. code:: python
 
     >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
     >>> pyjq.all('{user, title: .titles[]}', value)
@@ -102,7 +102,7 @@ result of transformation.
 
 ``first`` returns ``default`` when there are no results.
 
-::
+.. code:: python
 
     >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
     >>> pyjq.first('.titles[] | select(test("e"))', value) # The first title which is contains "e"
@@ -111,7 +111,7 @@ result of transformation.
 ``first`` returns the first result of transformation. It returns
 ``default`` when there are no results.
 
-::
+.. code:: python
 
     >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
     >>> pyjq.first('.titles[] | select(test("T"))', value, "Third JS") # The first title which is contains "T"
@@ -120,7 +120,7 @@ result of transformation.
 ``one`` do also returns the first result of transformation but raise
 Exception if there are no results.
 
-::
+.. code:: python
 
     >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
     >>> pyjq.one('.titles[] | select(test("T"))', value)

@@ -20,18 +20,20 @@ bindings but different and incompatible with pyjq.
 Example
 -------
 
-    >>> data = dict(
-    ...     parameters= [
-    ...         dict(name="PKG_TAG_NAME", value="trunk"),
-    ...         dict(name="GIT_COMMIT", value="master"),
-    ...         dict(name="TRIGGERED_JOB", value="trunk-buildall")
-    ...     ],
-    ...     id="2013-12-27_00-09-37",
-    ...     changeSet=dict(items=[], kind="git"),
-    ... )
-    >>> import pyjq
-    >>> pyjq.first('.parameters[] | {"param_name": .name, "param_type":.type}', data)
-    {'param_type': None, 'param_name': 'PKG_TAG_NAME'}
+```python
+>>> data = dict(
+...     parameters= [
+...         dict(name="PKG_TAG_NAME", value="trunk"),
+...         dict(name="GIT_COMMIT", value="master"),
+...         dict(name="TRIGGERED_JOB", value="trunk-buildall")
+...     ],
+...     id="2013-12-27_00-09-37",
+...     changeSet=dict(items=[], kind="git"),
+... )
+>>> import pyjq
+>>> pyjq.first('.parameters[] | {"param_name": .name, "param_type":.type}', data)
+{'param_type': None, 'param_name': 'PKG_TAG_NAME'}
+```
 
 Install
 -------
@@ -56,7 +58,7 @@ Only four APIs are provided:
 
 `all` transforms a value by JSON script and returns all results as a list.
 
-```
+```python
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.all('{user, title: .titles[]}', value)
 [{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
@@ -66,7 +68,7 @@ Only four APIs are provided:
 `vars` is a dictonary of predefined variables for `script`.
 The values in `vars` are avaiable in the `script` as a `$key`.
 That is, `vars` works like `--arg` option and `--argjson` option of jq command.
-```
+```python
 >>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={"title": "More JQ"})
 [{'user': 'stedolan', 'title': 'More JQ'}]
 ```
@@ -74,9 +76,9 @@ That is, `vars` works like `--arg` option and `--argjson` option of jq command.
 `all` takes an optional argument `url`.
 If `url` is given, the subject of transformation is got from the `url`.
 
-```
+```python
 >> pyjq.all(".[] | .login", url="https://api.github.com/repos/stedolan/jq/contributors") # get all contributors of jq
-['nicowilliams', 'stedolan', 'dtolnay', ...
+['nicowilliams', 'stedolan', 'dtolnay', ... ]
 ```
 
 Additionally, `all` takes an optional argument `opener`.
@@ -85,7 +87,7 @@ However, you can customize this behavior using custom `opener`.
 
 `first` is almost some to `all` but it `first` returns the first result of transformation.
 
-```
+```python
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.all('{user, title: .titles[]}', value)
 [{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
@@ -93,7 +95,7 @@ However, you can customize this behavior using custom `opener`.
 
 `first` returns `default` when there are no results.
 
-```
+```python
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.first('.titles[] | select(test("e"))', value) # The first title which is contains "e"
 'JQ Primer'
@@ -101,7 +103,7 @@ However, you can customize this behavior using custom `opener`.
 
 `first` returns the first result of transformation. It returns `default` when there are no results.
 
-```
+```python
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.first('.titles[] | select(test("T"))', value, "Third JS") # The first title which is contains "T"
 'Third JS'
@@ -109,7 +111,7 @@ However, you can customize this behavior using custom `opener`.
 
 `one` do also returns the first result of transformation but raise Exception if there are no results.
 
-```
+```python
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.one('.titles[] | select(test("T"))', value)
 IndexError: Result of jq is empty
