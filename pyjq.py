@@ -1,6 +1,8 @@
 import json
 import re
 
+from collections import OrderedDict
+
 from six.moves import urllib
 
 import _pyjq
@@ -8,7 +10,7 @@ import _pyjq
 __all__ = []
 
 
-def compile(script, vars={}, library_paths=[]):
+def compile(script, vars={}, library_paths=[], mapping_type=OrderedDict):
     """
     Compile a jq script, retuning a script object.
 
@@ -16,7 +18,9 @@ def compile(script, vars={}, library_paths=[]):
     """
 
     return _pyjq.Script(script.encode('utf-8'), vars=vars,
-                        library_paths=library_paths)
+                        library_paths=library_paths,
+                        mapping_type=mapping_type,
+                        )
 
 
 def default_opener(url):
@@ -42,33 +46,33 @@ def _get_value(value, url, opener):
     return value
 
 
-def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], mapping_type=OrderedDict):
     """
     Transform value by script, returning all results as list.
     """
-    return compile(script, vars, library_paths).all(_get_value(value, url, opener))
+    return compile(script, vars, library_paths, mapping_type).all(_get_value(value, url, opener))
 
 
-def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], mapping_type=OrderedDict):
     """
     Transform value by script, returning all results as list.
     """
-    return all(script, value, vars, url, opener, library_paths)
+    return all(script, value, vars, url, opener, library_paths, mapping_type)
 
 apply.__doc__ = all.__doc__
 
 
-def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=[], mapping_type=OrderedDict):
     """
     Transform object by jq script, returning the first result.
     Return default if result is empty.
     """
-    return compile(script, vars, library_paths).first(_get_value(value, url, opener), default)
+    return compile(script, vars, library_paths, mapping_type).first(_get_value(value, url, opener), default)
 
 
-def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], mapping_type=OrderedDict):
     """
     Transform object by jq script, returning the first result.
     Raise ValueError unless results does not include exactly one element.
     """
-    return compile(script, vars, library_paths).one(_get_value(value, url, opener))
+    return compile(script, vars, library_paths, mapping_type).one(_get_value(value, url, opener))

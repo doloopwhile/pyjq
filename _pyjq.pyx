@@ -93,7 +93,7 @@ cdef extern from "jq.h":
     void jq_set_error_cb(jq_state *, jq_err_cb, void *)
 
 
-cdef object jv_to_pyobj(jv jval):
+cdef object jv_to_pyobj(jv jval, object mapping_type):
     kind = jv_get_kind(jval)
 
     if kind == JV_KIND_NULL:
@@ -110,13 +110,14 @@ cdef object jv_to_pyobj(jv jval):
     elif kind == JV_KIND_STRING:
         return jv_string_value(jval).decode('utf-8')
     elif kind == JV_KIND_ARRAY:
-        return [jv_to_pyobj(jv_array_get(jv_copy(jval), i)) for i in range(jv_array_length(jv_copy(jval)))]
+        return [jv_to_pyobj(jv_array_get(jv_copy(jval), i), mapping_type)
+                for i in range(jv_array_length(jv_copy(jval)))]
     elif kind == JV_KIND_OBJECT:
-        adict = OrderedDict()
+        adict = mapping_type()
         it = jv_object_iter(jval)
         while jv_object_iter_valid(jval, it):
-            k = jv_to_pyobj(jv_object_iter_key(jval, it))
-            v = jv_to_pyobj(jv_object_iter_value(jval, it))
+            k = jv_to_pyobj(jv_object_iter_key(jval, it), mapping_type)
+            v = jv_to_pyobj(jv_object_iter_value(jval, it), mapping_type)
             adict[k] = v
             it = jv_object_iter_next(jval, it)
         return adict
@@ -163,9 +164,11 @@ cdef class Script:
     'Compiled jq script object'
     cdef object _errors
     cdef jq_state* _jq
+    cdef object mapping_type
 
-    def __init__(self, const char* script, vars={}, library_paths=[]):
+    def __init__(self, const char* script, vars={}, library_paths=[], mapping_type=OrderedDict):
         self._errors = []
+        self.mapping_type = mapping_type
         self._jq = jq_init()
         if not self._jq:
             raise RuntimeError('Failed to initialize jq')
@@ -205,10 +208,10 @@ cdef class Script:
                     if not jv_invalid_has_msg(jv_copy(result)):
                         break
                     m = jv_invalid_get_msg(jv_copy(result))
-                    e = str(jv_to_pyobj(m))
+                    e = str(jv_to_pyobj(m, self.mapping_type))
                     raise ScriptRuntimeError(e)
                 else:
-                    output.append(jv_to_pyobj(result))
+                    output.append(jv_to_pyobj(result, self.mapping_type))
             finally:
                 jv_free(result)
         return output
