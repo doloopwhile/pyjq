@@ -162,6 +162,15 @@ But, it cause bootstrap problem in ``pip install``.
 
 So, we DO commit both of `_pyjq.pyx` and `_pyjq.c`.
 
+License
+-------
+MIT License. See [LICENSE](./LICENSE).
+
+This package includes [jq](https://github.com/stedolan/jq) and [oniguruma](https://github.com/kkos/oniguruma). Their license files are included in archive files.
+
+- jq: `dependencies/jq-1.5.tar.gz`
+- oniguruma: `dependencies/onig-6.9.0.tar.gz`
+
 Changes
 -------
 
