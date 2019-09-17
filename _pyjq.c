@@ -1667,7 +1667,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  *     elif kind == JV_KIND_STRING:
  *         return jv_string_value(jval).decode('utf-8')             # <<<<<<<<<<<<<<
  *     elif kind == JV_KIND_ARRAY:
- *         alist = list()
+ *         alist = []
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_3 = jv_string_value(__pyx_v_jval);
@@ -1691,7 +1691,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     /* "_pyjq.pyx":113
  *         return jv_string_value(jval).decode('utf-8')
  *     elif kind == JV_KIND_ARRAY:
- *         alist = list()             # <<<<<<<<<<<<<<
+ *         alist = []             # <<<<<<<<<<<<<<
  *         for i in range(jv_array_length(jv_copy(jval))):
  *             value = jv_array_get(jv_copy(jval), i)
  */
@@ -1702,7 +1702,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
 
     /* "_pyjq.pyx":114
  *     elif kind == JV_KIND_ARRAY:
- *         alist = list()
+ *         alist = []
  *         for i in range(jv_array_length(jv_copy(jval))):             # <<<<<<<<<<<<<<
  *             value = jv_array_get(jv_copy(jval), i)
  *             alist.append(jv_to_pyobj(value))
@@ -1713,7 +1713,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
       __pyx_v_i = __pyx_t_6;
 
       /* "_pyjq.pyx":115
- *         alist = list()
+ *         alist = []
  *         for i in range(jv_array_length(jv_copy(jval))):
  *             value = jv_array_get(jv_copy(jval), i)             # <<<<<<<<<<<<<<
  *             alist.append(jv_to_pyobj(value))
@@ -1759,7 +1759,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  *     elif kind == JV_KIND_STRING:
  *         return jv_string_value(jval).decode('utf-8')
  *     elif kind == JV_KIND_ARRAY:             # <<<<<<<<<<<<<<
- *         alist = list()
+ *         alist = []
  *         for i in range(jv_array_length(jv_copy(jval))):
  */
     break;
