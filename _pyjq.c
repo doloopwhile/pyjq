@@ -810,7 +810,7 @@ static const char *__pyx_f[] = {
 /*--- Type declarations ---*/
 struct __pyx_obj_5_pyjq_Script;
 
-/* "_pyjq.pyx":171
+/* "_pyjq.pyx":166
  * 
  * 
  * cdef class Script:             # <<<<<<<<<<<<<<
@@ -945,51 +945,11 @@ static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
 #define __Pyx_PyList_Append(L,x) PyList_Append(L,x)
 #endif
 
-/* PyDictVersioning.proto */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
-#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
-    (version_var) = __PYX_GET_DICT_VERSION(dict);\
-    (cache_var) = (value);
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
-        (VAR) = __pyx_dict_cached_value;\
-    } else {\
-        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
-        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
-    }\
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
 #else
-#define __PYX_GET_DICT_VERSION(dict)  (0)
-#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
-#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
-#endif
-
-/* GetModuleGlobalName.proto */
-#if CYTHON_USE_DICT_VERSIONS
-#define __Pyx_GetModuleGlobalName(var, name)  {\
-    static PY_UINT64_T __pyx_dict_version = 0;\
-    static PyObject *__pyx_dict_cached_value = NULL;\
-    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
-        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
-        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
-}
-#define __Pyx_GetModuleGlobalNameUncached(var, name)  {\
-    PY_UINT64_T __pyx_dict_version;\
-    PyObject *__pyx_dict_cached_value;\
-    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
-}
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
-#else
-#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
-#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
 #endif
 
 /* PyFunctionFastCall.proto */
@@ -1022,30 +982,16 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg
 #define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
 #endif
 
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
 /* PyObjectCallMethO.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
 #endif
 
-/* PyObjectCallNoArg.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
-#else
-#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
-#endif
-
-/* PyCFunctionFastCall.proto */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
-#else
-#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
-#endif
-
 /* PyObjectCallOneArg.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
-
-/* PyObjectCall2Args.proto */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
 
 /* PyIntBinop.proto */
 #if !CYTHON_COMPILING_IN_PYPY
@@ -1057,6 +1003,13 @@ static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, 
 
 /* IterFinish.proto */
 static CYTHON_INLINE int __Pyx_IterFinish(void);
+
+/* PyObjectCallNoArg.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
+#else
+#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
+#endif
 
 /* PyObjectGetMethod.proto */
 static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method);
@@ -1179,6 +1132,53 @@ static PyObject* __Pyx_PyObject_CallMethod1(PyObject* obj, PyObject* method_name
 /* append.proto */
 static CYTHON_INLINE int __Pyx_PyObject_Append(PyObject* L, PyObject* x);
 
+/* PyDictVersioning.proto */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+#define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
+#define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)\
+    (version_var) = __PYX_GET_DICT_VERSION(dict);\
+    (cache_var) = (value);
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP) {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    if (likely(__PYX_GET_DICT_VERSION(DICT) == __pyx_dict_version)) {\
+        (VAR) = __pyx_dict_cached_value;\
+    } else {\
+        (VAR) = __pyx_dict_cached_value = (LOOKUP);\
+        __pyx_dict_version = __PYX_GET_DICT_VERSION(DICT);\
+    }\
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj);
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj);
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version);
+#else
+#define __PYX_GET_DICT_VERSION(dict)  (0)
+#define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
+#define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
+#endif
+
+/* GetModuleGlobalName.proto */
+#if CYTHON_USE_DICT_VERSIONS
+#define __Pyx_GetModuleGlobalName(var, name)  {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
+        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
+        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  {\
+    PY_UINT64_T __pyx_dict_version;\
+    PyObject *__pyx_dict_cached_value;\
+    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
+#else
+#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
+#endif
+
 /* GetException.proto */
 #if CYTHON_FAST_THREAD_STATE
 #define __Pyx_GetException(type, value, tb)  __Pyx__GetException(__pyx_tstate, type, value, tb)
@@ -1255,9 +1255,6 @@ static int __Pyx_setup_reduce(PyObject* type_obj);
 
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
-
-/* ImportFrom.proto */
-static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
 
 /* CalculateMetaclass.proto */
 static PyObject *__Pyx_CalculateMetaclass(PyTypeObject *metaclass, PyObject *bases);
@@ -1357,10 +1354,8 @@ static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_IndexError;
 static const char __pyx_k__4[] = "\n";
 static const char __pyx_k_os[] = "os";
-static const char __pyx_k_PY2[] = "PY2";
 static const char __pyx_k_all[] = "all";
 static const char __pyx_k_doc[] = "__doc__";
-static const char __pyx_k_six[] = "six";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "name";
 static const char __pyx_k_pyjq[] = "_pyjq";
@@ -1389,15 +1384,10 @@ static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_metaclass[] = "__metaclass__";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
-static const char __pyx_k_text_type[] = "text_type";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
-static const char __pyx_k_OrderedDict[] = "OrderedDict";
-static const char __pyx_k_binary_type[] = "binary_type";
-static const char __pyx_k_collections[] = "collections";
 static const char __pyx_k_RuntimeError[] = "RuntimeError";
-static const char __pyx_k_string_types[] = "string_types";
 static const char __pyx_k_library_paths[] = "library_paths";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_JQ_LIBRARY_PATH[] = "JQ_LIBRARY_PATH";
@@ -1417,8 +1407,6 @@ static PyObject *__pyx_kp_u_Failed_to_initialize_jq;
 static PyObject *__pyx_n_s_IndexError;
 static PyObject *__pyx_n_u_JQ_LIBRARY_PATH;
 static PyObject *__pyx_kp_u_Key_of_json_object_must_be_a_str;
-static PyObject *__pyx_n_s_OrderedDict;
-static PyObject *__pyx_n_s_PY2;
 static PyObject *__pyx_kp_u_Result_of_jq_have_multiple_eleme;
 static PyObject *__pyx_kp_u_Result_of_jq_is_empty;
 static PyObject *__pyx_n_s_RuntimeError;
@@ -1430,9 +1418,7 @@ static PyObject *__pyx_kp_u__4;
 static PyObject *__pyx_n_s_all;
 static PyObject *__pyx_n_s_append;
 static PyObject *__pyx_n_s_apply;
-static PyObject *__pyx_n_s_binary_type;
 static PyObject *__pyx_n_s_cline_in_traceback;
-static PyObject *__pyx_n_s_collections;
 static PyObject *__pyx_n_s_default;
 static PyObject *__pyx_n_s_doc;
 static PyObject *__pyx_n_s_encode;
@@ -1461,10 +1447,7 @@ static PyObject *__pyx_n_s_script;
 static PyObject *__pyx_kp_s_self__jq_cannot_be_converted_to;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
-static PyObject *__pyx_n_s_six;
-static PyObject *__pyx_n_s_string_types;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_text_type;
 static PyObject *__pyx_kp_u_utf_8;
 static PyObject *__pyx_n_s_value;
 static PyObject *__pyx_n_s_vars;
@@ -1487,7 +1470,7 @@ static PyObject *__pyx_tuple__7;
 static PyObject *__pyx_tuple__8;
 /* Late includes */
 
-/* "_pyjq.pyx":96
+/* "_pyjq.pyx":94
  * 
  * 
  * cdef object jv_to_pyobj(jv jval):             # <<<<<<<<<<<<<<
@@ -1514,11 +1497,9 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
   int __pyx_t_5;
   int __pyx_t_6;
   int __pyx_t_7;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("jv_to_pyobj", 0);
 
-  /* "_pyjq.pyx":97
+  /* "_pyjq.pyx":95
  * 
  * cdef object jv_to_pyobj(jv jval):
  *     kind = jv_get_kind(jval)             # <<<<<<<<<<<<<<
@@ -1527,7 +1508,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
   __pyx_v_kind = jv_get_kind(__pyx_v_jval);
 
-  /* "_pyjq.pyx":99
+  /* "_pyjq.pyx":97
  *     kind = jv_get_kind(jval)
  * 
  *     if kind == JV_KIND_NULL:             # <<<<<<<<<<<<<<
@@ -1537,7 +1518,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
   switch (__pyx_v_kind) {
     case JV_KIND_NULL:
 
-    /* "_pyjq.pyx":100
+    /* "_pyjq.pyx":98
  * 
  *     if kind == JV_KIND_NULL:
  *         return None             # <<<<<<<<<<<<<<
@@ -1548,7 +1529,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":99
+    /* "_pyjq.pyx":97
  *     kind = jv_get_kind(jval)
  * 
  *     if kind == JV_KIND_NULL:             # <<<<<<<<<<<<<<
@@ -1558,7 +1539,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     break;
     case JV_KIND_FALSE:
 
-    /* "_pyjq.pyx":102
+    /* "_pyjq.pyx":100
  *         return None
  *     elif kind == JV_KIND_FALSE:
  *         return False             # <<<<<<<<<<<<<<
@@ -1570,7 +1551,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     __pyx_r = Py_False;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":101
+    /* "_pyjq.pyx":99
  *     if kind == JV_KIND_NULL:
  *         return None
  *     elif kind == JV_KIND_FALSE:             # <<<<<<<<<<<<<<
@@ -1580,7 +1561,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     break;
     case JV_KIND_TRUE:
 
-    /* "_pyjq.pyx":104
+    /* "_pyjq.pyx":102
  *         return False
  *     elif kind == JV_KIND_TRUE:
  *         return True             # <<<<<<<<<<<<<<
@@ -1592,7 +1573,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     __pyx_r = Py_True;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":103
+    /* "_pyjq.pyx":101
  *     elif kind == JV_KIND_FALSE:
  *         return False
  *     elif kind == JV_KIND_TRUE:             # <<<<<<<<<<<<<<
@@ -1602,19 +1583,19 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     break;
     case JV_KIND_NUMBER:
 
-    /* "_pyjq.pyx":106
+    /* "_pyjq.pyx":104
  *         return True
  *     elif kind == JV_KIND_NUMBER:
  *         v = jv_number_value(jval)             # <<<<<<<<<<<<<<
  *         if jv_is_integer(jval):
  *             return int(v)
  */
-    __pyx_t_1 = PyFloat_FromDouble(jv_number_value(__pyx_v_jval)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble(jv_number_value(__pyx_v_jval)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_v = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "_pyjq.pyx":107
+    /* "_pyjq.pyx":105
  *     elif kind == JV_KIND_NUMBER:
  *         v = jv_number_value(jval)
  *         if jv_is_integer(jval):             # <<<<<<<<<<<<<<
@@ -1624,7 +1605,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     __pyx_t_2 = (jv_is_integer(__pyx_v_jval) != 0);
     if (__pyx_t_2) {
 
-      /* "_pyjq.pyx":108
+      /* "_pyjq.pyx":106
  *         v = jv_number_value(jval)
  *         if jv_is_integer(jval):
  *             return int(v)             # <<<<<<<<<<<<<<
@@ -1632,13 +1613,13 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  *     elif kind == JV_KIND_STRING:
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_v_v); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_v_v); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_r = __pyx_t_1;
       __pyx_t_1 = 0;
       goto __pyx_L0;
 
-      /* "_pyjq.pyx":107
+      /* "_pyjq.pyx":105
  *     elif kind == JV_KIND_NUMBER:
  *         v = jv_number_value(jval)
  *         if jv_is_integer(jval):             # <<<<<<<<<<<<<<
@@ -1647,7 +1628,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
     }
 
-    /* "_pyjq.pyx":109
+    /* "_pyjq.pyx":107
  *         if jv_is_integer(jval):
  *             return int(v)
  *         return v             # <<<<<<<<<<<<<<
@@ -1659,7 +1640,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     __pyx_r = __pyx_v_v;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":105
+    /* "_pyjq.pyx":103
  *     elif kind == JV_KIND_TRUE:
  *         return True
  *     elif kind == JV_KIND_NUMBER:             # <<<<<<<<<<<<<<
@@ -1669,7 +1650,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     break;
     case JV_KIND_STRING:
 
-    /* "_pyjq.pyx":111
+    /* "_pyjq.pyx":109
  *         return v
  *     elif kind == JV_KIND_STRING:
  *         return jv_string_value(jval).decode('utf-8')             # <<<<<<<<<<<<<<
@@ -1678,14 +1659,14 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_3 = jv_string_value(__pyx_v_jval);
-    __pyx_t_1 = __Pyx_decode_c_string(__pyx_t_3, 0, strlen(__pyx_t_3), NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_decode_c_string(__pyx_t_3, 0, strlen(__pyx_t_3), NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":110
+    /* "_pyjq.pyx":108
  *             return int(v)
  *         return v
  *     elif kind == JV_KIND_STRING:             # <<<<<<<<<<<<<<
@@ -1695,19 +1676,19 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     break;
     case JV_KIND_ARRAY:
 
-    /* "_pyjq.pyx":113
+    /* "_pyjq.pyx":111
  *         return jv_string_value(jval).decode('utf-8')
  *     elif kind == JV_KIND_ARRAY:
  *         alist = []             # <<<<<<<<<<<<<<
  *         for i in range(jv_array_length(jv_copy(jval))):
  *             value = jv_array_get(jv_copy(jval), i)
  */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_alist = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "_pyjq.pyx":114
+    /* "_pyjq.pyx":112
  *     elif kind == JV_KIND_ARRAY:
  *         alist = []
  *         for i in range(jv_array_length(jv_copy(jval))):             # <<<<<<<<<<<<<<
@@ -1719,7 +1700,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_i = __pyx_t_6;
 
-      /* "_pyjq.pyx":115
+      /* "_pyjq.pyx":113
  *         alist = []
  *         for i in range(jv_array_length(jv_copy(jval))):
  *             value = jv_array_get(jv_copy(jval), i)             # <<<<<<<<<<<<<<
@@ -1728,19 +1709,19 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
       __pyx_v_value = jv_array_get(jv_copy(__pyx_v_jval), __pyx_v_i);
 
-      /* "_pyjq.pyx":116
+      /* "_pyjq.pyx":114
  *         for i in range(jv_array_length(jv_copy(jval))):
  *             value = jv_array_get(jv_copy(jval), i)
  *             alist.append(jv_to_pyobj(value))             # <<<<<<<<<<<<<<
  *             jv_free(value)
  *         return alist
  */
-      __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_value); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_value); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_alist, __pyx_t_1); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_alist, __pyx_t_1); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 114, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "_pyjq.pyx":117
+      /* "_pyjq.pyx":115
  *             value = jv_array_get(jv_copy(jval), i)
  *             alist.append(jv_to_pyobj(value))
  *             jv_free(value)             # <<<<<<<<<<<<<<
@@ -1750,19 +1731,19 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
       jv_free(__pyx_v_value);
     }
 
-    /* "_pyjq.pyx":118
+    /* "_pyjq.pyx":116
  *             alist.append(jv_to_pyobj(value))
  *             jv_free(value)
  *         return alist             # <<<<<<<<<<<<<<
  *     elif kind == JV_KIND_OBJECT:
- *         adict = OrderedDict()
+ *         adict = {}
  */
     __Pyx_XDECREF(__pyx_r);
     __Pyx_INCREF(__pyx_v_alist);
     __pyx_r = __pyx_v_alist;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":112
+    /* "_pyjq.pyx":110
  *     elif kind == JV_KIND_STRING:
  *         return jv_string_value(jval).decode('utf-8')
  *     elif kind == JV_KIND_ARRAY:             # <<<<<<<<<<<<<<
@@ -1772,44 +1753,29 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     break;
     case JV_KIND_OBJECT:
 
-    /* "_pyjq.pyx":120
+    /* "_pyjq.pyx":118
  *         return alist
  *     elif kind == JV_KIND_OBJECT:
- *         adict = OrderedDict()             # <<<<<<<<<<<<<<
+ *         adict = {}             # <<<<<<<<<<<<<<
  *         it = jv_object_iter(jval)
  *         while jv_object_iter_valid(jval, it):
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_OrderedDict); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 120, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
-      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
-      if (likely(__pyx_t_9)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-        __Pyx_INCREF(__pyx_t_9);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_8, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_v_adict = __pyx_t_1;
+    __pyx_v_adict = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "_pyjq.pyx":121
+    /* "_pyjq.pyx":119
  *     elif kind == JV_KIND_OBJECT:
- *         adict = OrderedDict()
+ *         adict = {}
  *         it = jv_object_iter(jval)             # <<<<<<<<<<<<<<
  *         while jv_object_iter_valid(jval, it):
  *             key = jv_object_iter_key(jval, it)
  */
     __pyx_v_it = jv_object_iter(__pyx_v_jval);
 
-    /* "_pyjq.pyx":122
- *         adict = OrderedDict()
+    /* "_pyjq.pyx":120
+ *         adict = {}
  *         it = jv_object_iter(jval)
  *         while jv_object_iter_valid(jval, it):             # <<<<<<<<<<<<<<
  *             key = jv_object_iter_key(jval, it)
@@ -1819,7 +1785,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
       __pyx_t_2 = (jv_object_iter_valid(__pyx_v_jval, __pyx_v_it) != 0);
       if (!__pyx_t_2) break;
 
-      /* "_pyjq.pyx":123
+      /* "_pyjq.pyx":121
  *         it = jv_object_iter(jval)
  *         while jv_object_iter_valid(jval, it):
  *             key = jv_object_iter_key(jval, it)             # <<<<<<<<<<<<<<
@@ -1828,19 +1794,19 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
       __pyx_v_key = jv_object_iter_key(__pyx_v_jval, __pyx_v_it);
 
-      /* "_pyjq.pyx":124
+      /* "_pyjq.pyx":122
  *         while jv_object_iter_valid(jval, it):
  *             key = jv_object_iter_key(jval, it)
  *             k = jv_to_pyobj(key)             # <<<<<<<<<<<<<<
  *             jv_free(key)
  *             value = jv_object_iter_value(jval, it)
  */
-      __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+      __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "_pyjq.pyx":125
+      /* "_pyjq.pyx":123
  *             key = jv_object_iter_key(jval, it)
  *             k = jv_to_pyobj(key)
  *             jv_free(key)             # <<<<<<<<<<<<<<
@@ -1849,7 +1815,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
       jv_free(__pyx_v_key);
 
-      /* "_pyjq.pyx":126
+      /* "_pyjq.pyx":124
  *             k = jv_to_pyobj(key)
  *             jv_free(key)
  *             value = jv_object_iter_value(jval, it)             # <<<<<<<<<<<<<<
@@ -1858,19 +1824,19 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
       __pyx_v_value = jv_object_iter_value(__pyx_v_jval, __pyx_v_it);
 
-      /* "_pyjq.pyx":127
+      /* "_pyjq.pyx":125
  *             jv_free(key)
  *             value = jv_object_iter_value(jval, it)
  *             v = jv_to_pyobj(value)             # <<<<<<<<<<<<<<
  *             jv_free(value)
  *             adict[k] = v
  */
-      __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_value); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
+      __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_value); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_XDECREF_SET(__pyx_v_v, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "_pyjq.pyx":128
+      /* "_pyjq.pyx":126
  *             value = jv_object_iter_value(jval, it)
  *             v = jv_to_pyobj(value)
  *             jv_free(value)             # <<<<<<<<<<<<<<
@@ -1879,16 +1845,16 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
  */
       jv_free(__pyx_v_value);
 
-      /* "_pyjq.pyx":129
+      /* "_pyjq.pyx":127
  *             v = jv_to_pyobj(value)
  *             jv_free(value)
  *             adict[k] = v             # <<<<<<<<<<<<<<
  *             it = jv_object_iter_next(jval, it)
  *         return adict
  */
-      if (unlikely(PyObject_SetItem(__pyx_v_adict, __pyx_v_k, __pyx_v_v) < 0)) __PYX_ERR(0, 129, __pyx_L1_error)
+      if (unlikely(PyDict_SetItem(__pyx_v_adict, __pyx_v_k, __pyx_v_v) < 0)) __PYX_ERR(0, 127, __pyx_L1_error)
 
-      /* "_pyjq.pyx":130
+      /* "_pyjq.pyx":128
  *             jv_free(value)
  *             adict[k] = v
  *             it = jv_object_iter_next(jval, it)             # <<<<<<<<<<<<<<
@@ -1898,7 +1864,7 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
       __pyx_v_it = jv_object_iter_next(__pyx_v_jval, __pyx_v_it);
     }
 
-    /* "_pyjq.pyx":131
+    /* "_pyjq.pyx":129
  *             adict[k] = v
  *             it = jv_object_iter_next(jval, it)
  *         return adict             # <<<<<<<<<<<<<<
@@ -1910,18 +1876,18 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
     __pyx_r = __pyx_v_adict;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":119
+    /* "_pyjq.pyx":117
  *             jv_free(value)
  *         return alist
  *     elif kind == JV_KIND_OBJECT:             # <<<<<<<<<<<<<<
- *         adict = OrderedDict()
+ *         adict = {}
  *         it = jv_object_iter(jval)
  */
     break;
     default: break;
   }
 
-  /* "_pyjq.pyx":96
+  /* "_pyjq.pyx":94
  * 
  * 
  * cdef object jv_to_pyobj(jv jval):             # <<<<<<<<<<<<<<
@@ -1934,8 +1900,6 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("_pyjq.jv_to_pyobj", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -1948,11 +1912,11 @@ static PyObject *__pyx_f_5_pyjq_jv_to_pyobj(jv __pyx_v_jval) {
   return __pyx_r;
 }
 
-/* "_pyjq.pyx":134
+/* "_pyjq.pyx":132
  * 
  * 
  * cdef jv pyobj_to_jv(object pyobj):             # <<<<<<<<<<<<<<
- *     if isinstance(pyobj, six.text_type):
+ *     if isinstance(pyobj, str):
  *         pyobj = pyobj.encode('utf-8')
  */
 
@@ -1964,10 +1928,10 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
   PyObject *__pyx_v_value = NULL;
   jv __pyx_r;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_t_3;
-  int __pyx_t_4;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   char const *__pyx_t_6;
   Py_ssize_t __pyx_t_7;
@@ -1981,150 +1945,124 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
   __Pyx_RefNannySetupContext("pyobj_to_jv", 0);
   __Pyx_INCREF(__pyx_v_pyobj);
 
-  /* "_pyjq.pyx":135
+  /* "_pyjq.pyx":133
  * 
  * cdef jv pyobj_to_jv(object pyobj):
- *     if isinstance(pyobj, six.text_type):             # <<<<<<<<<<<<<<
+ *     if isinstance(pyobj, str):             # <<<<<<<<<<<<<<
  *         pyobj = pyobj.encode('utf-8')
  *         return jv_string_sized(pyobj, len(pyobj))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_six); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_text_type); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = PyObject_IsInstance(__pyx_v_pyobj, __pyx_t_2); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = (__pyx_t_3 != 0);
-  if (__pyx_t_4) {
+  __pyx_t_1 = PyUnicode_Check(__pyx_v_pyobj); 
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
-    /* "_pyjq.pyx":136
+    /* "_pyjq.pyx":134
  * cdef jv pyobj_to_jv(object pyobj):
- *     if isinstance(pyobj, six.text_type):
+ *     if isinstance(pyobj, str):
  *         pyobj = pyobj.encode('utf-8')             # <<<<<<<<<<<<<<
  *         return jv_string_sized(pyobj, len(pyobj))
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):
+ *     elif isinstance(pyobj, bytes):
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_pyobj, __pyx_n_s_encode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_pyobj, __pyx_n_s_encode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
       if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
         __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_1, function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
       }
     }
-    __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_5, __pyx_kp_u_utf_8) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_kp_u_utf_8);
+    __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_kp_u_utf_8) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_utf_8);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF_SET(__pyx_v_pyobj, __pyx_t_2);
-    __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF_SET(__pyx_v_pyobj, __pyx_t_3);
+    __pyx_t_3 = 0;
 
-    /* "_pyjq.pyx":137
- *     if isinstance(pyobj, six.text_type):
+    /* "_pyjq.pyx":135
+ *     if isinstance(pyobj, str):
  *         pyobj = pyobj.encode('utf-8')
  *         return jv_string_sized(pyobj, len(pyobj))             # <<<<<<<<<<<<<<
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):
+ *     elif isinstance(pyobj, bytes):
  *         return jv_string_sized(pyobj, len(pyobj))
+ */
+    __pyx_t_6 = __Pyx_PyObject_AsString(__pyx_v_pyobj); if (unlikely((!__pyx_t_6) && PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_7 = PyObject_Length(__pyx_v_pyobj); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_r = jv_string_sized(__pyx_t_6, __pyx_t_7);
+    goto __pyx_L0;
+
+    /* "_pyjq.pyx":133
+ * 
+ * cdef jv pyobj_to_jv(object pyobj):
+ *     if isinstance(pyobj, str):             # <<<<<<<<<<<<<<
+ *         pyobj = pyobj.encode('utf-8')
+ *         return jv_string_sized(pyobj, len(pyobj))
+ */
+  }
+
+  /* "_pyjq.pyx":136
+ *         pyobj = pyobj.encode('utf-8')
+ *         return jv_string_sized(pyobj, len(pyobj))
+ *     elif isinstance(pyobj, bytes):             # <<<<<<<<<<<<<<
+ *         return jv_string_sized(pyobj, len(pyobj))
+ *     elif isinstance(pyobj, bool):
+ */
+  __pyx_t_2 = PyBytes_Check(__pyx_v_pyobj); 
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
+
+    /* "_pyjq.pyx":137
+ *         return jv_string_sized(pyobj, len(pyobj))
+ *     elif isinstance(pyobj, bytes):
+ *         return jv_string_sized(pyobj, len(pyobj))             # <<<<<<<<<<<<<<
+ *     elif isinstance(pyobj, bool):
+ *         return jv_bool(pyobj)
  */
     __pyx_t_6 = __Pyx_PyObject_AsString(__pyx_v_pyobj); if (unlikely((!__pyx_t_6) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
     __pyx_t_7 = PyObject_Length(__pyx_v_pyobj); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 137, __pyx_L1_error)
     __pyx_r = jv_string_sized(__pyx_t_6, __pyx_t_7);
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":135
- * 
- * cdef jv pyobj_to_jv(object pyobj):
- *     if isinstance(pyobj, six.text_type):             # <<<<<<<<<<<<<<
+    /* "_pyjq.pyx":136
  *         pyobj = pyobj.encode('utf-8')
  *         return jv_string_sized(pyobj, len(pyobj))
+ *     elif isinstance(pyobj, bytes):             # <<<<<<<<<<<<<<
+ *         return jv_string_sized(pyobj, len(pyobj))
+ *     elif isinstance(pyobj, bool):
  */
   }
 
   /* "_pyjq.pyx":138
- *         pyobj = pyobj.encode('utf-8')
- *         return jv_string_sized(pyobj, len(pyobj))
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):             # <<<<<<<<<<<<<<
- *         return jv_string_sized(pyobj, len(pyobj))
- *     elif isinstance(pyobj, bool):
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_six); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_PY2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__pyx_t_3) {
-  } else {
-    __pyx_t_4 = __pyx_t_3;
-    goto __pyx_L4_bool_binop_done;
-  }
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_six); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_binary_type); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = PyObject_IsInstance(__pyx_v_pyobj, __pyx_t_2); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_8 = (__pyx_t_3 != 0);
-  __pyx_t_4 = __pyx_t_8;
-  __pyx_L4_bool_binop_done:;
-  if (__pyx_t_4) {
-
-    /* "_pyjq.pyx":139
- *         return jv_string_sized(pyobj, len(pyobj))
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):
- *         return jv_string_sized(pyobj, len(pyobj))             # <<<<<<<<<<<<<<
- *     elif isinstance(pyobj, bool):
- *         return jv_bool(pyobj)
- */
-    __pyx_t_6 = __Pyx_PyObject_AsString(__pyx_v_pyobj); if (unlikely((!__pyx_t_6) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
-    __pyx_t_7 = PyObject_Length(__pyx_v_pyobj); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 139, __pyx_L1_error)
-    __pyx_r = jv_string_sized(__pyx_t_6, __pyx_t_7);
-    goto __pyx_L0;
-
-    /* "_pyjq.pyx":138
- *         pyobj = pyobj.encode('utf-8')
- *         return jv_string_sized(pyobj, len(pyobj))
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):             # <<<<<<<<<<<<<<
- *         return jv_string_sized(pyobj, len(pyobj))
- *     elif isinstance(pyobj, bool):
- */
-  }
-
-  /* "_pyjq.pyx":140
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):
+ *     elif isinstance(pyobj, bytes):
  *         return jv_string_sized(pyobj, len(pyobj))
  *     elif isinstance(pyobj, bool):             # <<<<<<<<<<<<<<
  *         return jv_bool(pyobj)
  *     elif isinstance(pyobj, (int, long, float)):
  */
-  __pyx_t_2 = ((PyObject*)&PyBool_Type);
-  __Pyx_INCREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_IsInstance(__pyx_v_pyobj, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 140, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_8 = (__pyx_t_4 != 0);
-  if (__pyx_t_8) {
+  __pyx_t_3 = ((PyObject*)&PyBool_Type);
+  __Pyx_INCREF(__pyx_t_3);
+  __pyx_t_1 = PyObject_IsInstance(__pyx_v_pyobj, __pyx_t_3); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
-    /* "_pyjq.pyx":141
+    /* "_pyjq.pyx":139
  *         return jv_string_sized(pyobj, len(pyobj))
  *     elif isinstance(pyobj, bool):
  *         return jv_bool(pyobj)             # <<<<<<<<<<<<<<
  *     elif isinstance(pyobj, (int, long, float)):
  *         return jv_number(pyobj)
  */
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_pyobj); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L1_error)
-    __pyx_r = jv_bool(__pyx_t_9);
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_pyobj); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
+    __pyx_r = jv_bool(__pyx_t_8);
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":140
- *     elif six.PY2 and isinstance(pyobj, six.binary_type):
+    /* "_pyjq.pyx":138
+ *     elif isinstance(pyobj, bytes):
  *         return jv_string_sized(pyobj, len(pyobj))
  *     elif isinstance(pyobj, bool):             # <<<<<<<<<<<<<<
  *         return jv_bool(pyobj)
@@ -2132,46 +2070,46 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
   }
 
-  /* "_pyjq.pyx":142
+  /* "_pyjq.pyx":140
  *     elif isinstance(pyobj, bool):
  *         return jv_bool(pyobj)
  *     elif isinstance(pyobj, (int, long, float)):             # <<<<<<<<<<<<<<
  *         return jv_number(pyobj)
  *     elif isinstance(pyobj, (list, tuple)):
  */
-  __pyx_t_4 = PyInt_Check(__pyx_v_pyobj); 
-  __pyx_t_3 = (__pyx_t_4 != 0);
-  if (!__pyx_t_3) {
+  __pyx_t_1 = PyInt_Check(__pyx_v_pyobj); 
+  __pyx_t_9 = (__pyx_t_1 != 0);
+  if (!__pyx_t_9) {
   } else {
-    __pyx_t_8 = __pyx_t_3;
-    goto __pyx_L6_bool_binop_done;
+    __pyx_t_2 = __pyx_t_9;
+    goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_3 = PyLong_Check(__pyx_v_pyobj); 
-  __pyx_t_4 = (__pyx_t_3 != 0);
-  if (!__pyx_t_4) {
+  __pyx_t_9 = PyLong_Check(__pyx_v_pyobj); 
+  __pyx_t_1 = (__pyx_t_9 != 0);
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_8 = __pyx_t_4;
-    goto __pyx_L6_bool_binop_done;
+    __pyx_t_2 = __pyx_t_1;
+    goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_4 = PyFloat_Check(__pyx_v_pyobj); 
-  __pyx_t_3 = (__pyx_t_4 != 0);
-  __pyx_t_8 = __pyx_t_3;
-  __pyx_L6_bool_binop_done:;
-  __pyx_t_3 = (__pyx_t_8 != 0);
-  if (__pyx_t_3) {
+  __pyx_t_1 = PyFloat_Check(__pyx_v_pyobj); 
+  __pyx_t_9 = (__pyx_t_1 != 0);
+  __pyx_t_2 = __pyx_t_9;
+  __pyx_L4_bool_binop_done:;
+  __pyx_t_9 = (__pyx_t_2 != 0);
+  if (__pyx_t_9) {
 
-    /* "_pyjq.pyx":143
+    /* "_pyjq.pyx":141
  *         return jv_bool(pyobj)
  *     elif isinstance(pyobj, (int, long, float)):
  *         return jv_number(pyobj)             # <<<<<<<<<<<<<<
  *     elif isinstance(pyobj, (list, tuple)):
  *         jval = jv_array()
  */
-    __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_v_pyobj); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_v_pyobj); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L1_error)
     __pyx_r = jv_number(__pyx_t_10);
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":142
+    /* "_pyjq.pyx":140
  *     elif isinstance(pyobj, bool):
  *         return jv_bool(pyobj)
  *     elif isinstance(pyobj, (int, long, float)):             # <<<<<<<<<<<<<<
@@ -2180,28 +2118,28 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
   }
 
-  /* "_pyjq.pyx":144
+  /* "_pyjq.pyx":142
  *     elif isinstance(pyobj, (int, long, float)):
  *         return jv_number(pyobj)
  *     elif isinstance(pyobj, (list, tuple)):             # <<<<<<<<<<<<<<
  *         jval = jv_array()
  *         for i, item in enumerate(pyobj):
  */
-  __pyx_t_8 = PyList_Check(__pyx_v_pyobj); 
-  __pyx_t_4 = (__pyx_t_8 != 0);
-  if (!__pyx_t_4) {
+  __pyx_t_2 = PyList_Check(__pyx_v_pyobj); 
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_3 = __pyx_t_4;
-    goto __pyx_L9_bool_binop_done;
+    __pyx_t_9 = __pyx_t_1;
+    goto __pyx_L7_bool_binop_done;
   }
-  __pyx_t_4 = PyTuple_Check(__pyx_v_pyobj); 
-  __pyx_t_8 = (__pyx_t_4 != 0);
-  __pyx_t_3 = __pyx_t_8;
-  __pyx_L9_bool_binop_done:;
-  __pyx_t_8 = (__pyx_t_3 != 0);
-  if (__pyx_t_8) {
+  __pyx_t_1 = PyTuple_Check(__pyx_v_pyobj); 
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  __pyx_t_9 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  __pyx_t_2 = (__pyx_t_9 != 0);
+  if (__pyx_t_2) {
 
-    /* "_pyjq.pyx":145
+    /* "_pyjq.pyx":143
  *         return jv_number(pyobj)
  *     elif isinstance(pyobj, (list, tuple)):
  *         jval = jv_array()             # <<<<<<<<<<<<<<
@@ -2210,7 +2148,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
     __pyx_v_jval = jv_array();
 
-    /* "_pyjq.pyx":146
+    /* "_pyjq.pyx":144
  *     elif isinstance(pyobj, (list, tuple)):
  *         jval = jv_array()
  *         for i, item in enumerate(pyobj):             # <<<<<<<<<<<<<<
@@ -2218,41 +2156,41 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  *         return jval
  */
     __Pyx_INCREF(__pyx_int_0);
-    __pyx_t_2 = __pyx_int_0;
+    __pyx_t_3 = __pyx_int_0;
     if (likely(PyList_CheckExact(__pyx_v_pyobj)) || PyTuple_CheckExact(__pyx_v_pyobj)) {
-      __pyx_t_1 = __pyx_v_pyobj; __Pyx_INCREF(__pyx_t_1); __pyx_t_7 = 0;
+      __pyx_t_4 = __pyx_v_pyobj; __Pyx_INCREF(__pyx_t_4); __pyx_t_7 = 0;
       __pyx_t_11 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_pyobj); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_11 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_pyobj); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_11 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 144, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_11)) {
-        if (likely(PyList_CheckExact(__pyx_t_1))) {
-          if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_1)) break;
+        if (likely(PyList_CheckExact(__pyx_t_4))) {
+          if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_4)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 146, __pyx_L1_error)
+          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 144, __pyx_L1_error)
           #else
-          __pyx_t_5 = PySequence_ITEM(__pyx_t_1, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+          __pyx_t_5 = PySequence_ITEM(__pyx_t_4, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         } else {
-          if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+          if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 146, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 144, __pyx_L1_error)
           #else
-          __pyx_t_5 = PySequence_ITEM(__pyx_t_1, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+          __pyx_t_5 = PySequence_ITEM(__pyx_t_4, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         }
       } else {
-        __pyx_t_5 = __pyx_t_11(__pyx_t_1);
+        __pyx_t_5 = __pyx_t_11(__pyx_t_4);
         if (unlikely(!__pyx_t_5)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 146, __pyx_L1_error)
+            else __PYX_ERR(0, 144, __pyx_L1_error)
           }
           break;
         }
@@ -2260,15 +2198,15 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
       }
       __Pyx_XDECREF_SET(__pyx_v_item, __pyx_t_5);
       __pyx_t_5 = 0;
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
-      __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_3);
+      __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_2);
-      __pyx_t_2 = __pyx_t_5;
+      __Pyx_DECREF(__pyx_t_3);
+      __pyx_t_3 = __pyx_t_5;
       __pyx_t_5 = 0;
 
-      /* "_pyjq.pyx":147
+      /* "_pyjq.pyx":145
  *         jval = jv_array()
  *         for i, item in enumerate(pyobj):
  *             jval = jv_array_append(jval, pyobj_to_jv(item))             # <<<<<<<<<<<<<<
@@ -2277,7 +2215,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
       __pyx_v_jval = jv_array_append(__pyx_v_jval, __pyx_f_5_pyjq_pyobj_to_jv(__pyx_v_item));
 
-      /* "_pyjq.pyx":146
+      /* "_pyjq.pyx":144
  *     elif isinstance(pyobj, (list, tuple)):
  *         jval = jv_array()
  *         for i, item in enumerate(pyobj):             # <<<<<<<<<<<<<<
@@ -2285,10 +2223,10 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  *         return jval
  */
     }
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "_pyjq.pyx":148
+    /* "_pyjq.pyx":146
  *         for i, item in enumerate(pyobj):
  *             jval = jv_array_append(jval, pyobj_to_jv(item))
  *         return jval             # <<<<<<<<<<<<<<
@@ -2298,7 +2236,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
     __pyx_r = __pyx_v_jval;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":144
+    /* "_pyjq.pyx":142
  *     elif isinstance(pyobj, (int, long, float)):
  *         return jv_number(pyobj)
  *     elif isinstance(pyobj, (list, tuple)):             # <<<<<<<<<<<<<<
@@ -2307,173 +2245,107 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
   }
 
-  /* "_pyjq.pyx":149
+  /* "_pyjq.pyx":147
  *             jval = jv_array_append(jval, pyobj_to_jv(item))
  *         return jval
  *     elif isinstance(pyobj, dict):             # <<<<<<<<<<<<<<
  *         jval = jv_object()
  *         for key, value in pyobj.items():
  */
-  __pyx_t_8 = PyDict_Check(__pyx_v_pyobj); 
-  __pyx_t_3 = (__pyx_t_8 != 0);
-  if (__pyx_t_3) {
+  __pyx_t_2 = PyDict_Check(__pyx_v_pyobj); 
+  __pyx_t_9 = (__pyx_t_2 != 0);
+  if (__pyx_t_9) {
 
-    /* "_pyjq.pyx":150
+    /* "_pyjq.pyx":148
  *         return jval
  *     elif isinstance(pyobj, dict):
  *         jval = jv_object()             # <<<<<<<<<<<<<<
  *         for key, value in pyobj.items():
- *             if isinstance(key, six.string_types):
+ *             if not isinstance(key, str):
  */
     __pyx_v_jval = jv_object();
 
-    /* "_pyjq.pyx":151
+    /* "_pyjq.pyx":149
  *     elif isinstance(pyobj, dict):
  *         jval = jv_object()
  *         for key, value in pyobj.items():             # <<<<<<<<<<<<<<
- *             if isinstance(key, six.string_types):
- *                 if isinstance(key, six.binary_type):
+ *             if not isinstance(key, str):
+ *                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
  */
     __pyx_t_7 = 0;
     if (unlikely(__pyx_v_pyobj == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
-      __PYX_ERR(0, 151, __pyx_L1_error)
+      __PYX_ERR(0, 149, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_dict_iterator(__pyx_v_pyobj, 0, __pyx_n_s_items, (&__pyx_t_12), (&__pyx_t_9)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_XDECREF(__pyx_t_2);
-    __pyx_t_2 = __pyx_t_1;
-    __pyx_t_1 = 0;
+    __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_pyobj, 0, __pyx_n_s_items, (&__pyx_t_12), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 149, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_3);
+    __pyx_t_3 = __pyx_t_4;
+    __pyx_t_4 = 0;
     while (1) {
-      __pyx_t_13 = __Pyx_dict_iter_next(__pyx_t_2, __pyx_t_12, &__pyx_t_7, &__pyx_t_1, &__pyx_t_5, NULL, __pyx_t_9);
+      __pyx_t_13 = __Pyx_dict_iter_next(__pyx_t_3, __pyx_t_12, &__pyx_t_7, &__pyx_t_4, &__pyx_t_5, NULL, __pyx_t_8);
       if (unlikely(__pyx_t_13 == 0)) break;
-      if (unlikely(__pyx_t_13 == -1)) __PYX_ERR(0, 151, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
+      if (unlikely(__pyx_t_13 == -1)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_XDECREF_SET(__pyx_v_key, __pyx_t_1);
-      __pyx_t_1 = 0;
+      __Pyx_XDECREF_SET(__pyx_v_key, __pyx_t_4);
+      __pyx_t_4 = 0;
       __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_5);
       __pyx_t_5 = 0;
 
-      /* "_pyjq.pyx":152
+      /* "_pyjq.pyx":150
  *         jval = jv_object()
  *         for key, value in pyobj.items():
- *             if isinstance(key, six.string_types):             # <<<<<<<<<<<<<<
- *                 if isinstance(key, six.binary_type):
- *                     key = six.text_type(key)
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_six); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_string_types); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_3 = PyObject_IsInstance(__pyx_v_key, __pyx_t_1); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 152, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_8 = (__pyx_t_3 != 0);
-      if (likely(__pyx_t_8)) {
-
-        /* "_pyjq.pyx":153
- *         for key, value in pyobj.items():
- *             if isinstance(key, six.string_types):
- *                 if isinstance(key, six.binary_type):             # <<<<<<<<<<<<<<
- *                     key = six.text_type(key)
- *             else:
- */
-        __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_six); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_binary_type); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_8 = PyObject_IsInstance(__pyx_v_key, __pyx_t_5); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 153, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        __pyx_t_3 = (__pyx_t_8 != 0);
-        if (__pyx_t_3) {
-
-          /* "_pyjq.pyx":154
- *             if isinstance(key, six.string_types):
- *                 if isinstance(key, six.binary_type):
- *                     key = six.text_type(key)             # <<<<<<<<<<<<<<
- *             else:
+ *             if not isinstance(key, str):             # <<<<<<<<<<<<<<
  *                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
+ *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_six); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_text_type); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 154, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_14);
-          __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-          __pyx_t_1 = NULL;
-          if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
-            __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_14);
-            if (likely(__pyx_t_1)) {
-              PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-              __Pyx_INCREF(__pyx_t_1);
-              __Pyx_INCREF(function);
-              __Pyx_DECREF_SET(__pyx_t_14, function);
-            }
-          }
-          __pyx_t_5 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_1, __pyx_v_key) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_v_key);
-          __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_5);
-          __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          __Pyx_DECREF_SET(__pyx_v_key, __pyx_t_5);
-          __pyx_t_5 = 0;
+      __pyx_t_9 = PyUnicode_Check(__pyx_v_key); 
+      __pyx_t_2 = ((!(__pyx_t_9 != 0)) != 0);
+      if (unlikely(__pyx_t_2)) {
 
-          /* "_pyjq.pyx":153
+        /* "_pyjq.pyx":151
  *         for key, value in pyobj.items():
- *             if isinstance(key, six.string_types):
- *                 if isinstance(key, six.binary_type):             # <<<<<<<<<<<<<<
- *                     key = six.text_type(key)
- *             else:
- */
-        }
-
-        /* "_pyjq.pyx":152
- *         jval = jv_object()
- *         for key, value in pyobj.items():
- *             if isinstance(key, six.string_types):             # <<<<<<<<<<<<<<
- *                 if isinstance(key, six.binary_type):
- *                     key = six.text_type(key)
- */
-        goto __pyx_L15;
-      }
-
-      /* "_pyjq.pyx":156
- *                     key = six.text_type(key)
- *             else:
+ *             if not isinstance(key, str):
  *                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))             # <<<<<<<<<<<<<<
  *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
  *         return jval
  */
-      /*else*/ {
-        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Key_of_json_object_must_be_a_str, __pyx_n_s_format); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 156, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_14);
-        __pyx_t_1 = NULL;
-        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
-          __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_14);
-          if (likely(__pyx_t_1)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-            __Pyx_INCREF(__pyx_t_1);
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Key_of_json_object_must_be_a_str, __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_14 = NULL;
+        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+          __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_4);
+          if (likely(__pyx_t_14)) {
+            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+            __Pyx_INCREF(__pyx_t_14);
             __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_14, function);
+            __Pyx_DECREF_SET(__pyx_t_4, function);
           }
         }
-        __pyx_t_5 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_1, ((PyObject *)Py_TYPE(__pyx_v_key))) : __Pyx_PyObject_CallOneArg(__pyx_t_14, ((PyObject *)Py_TYPE(__pyx_v_key)));
-        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 156, __pyx_L1_error)
+        __pyx_t_5 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_14, ((PyObject *)Py_TYPE(__pyx_v_key))) : __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)Py_TYPE(__pyx_v_key)));
+        __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
+        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_5); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 156, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_14);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        __Pyx_Raise(__pyx_t_14, 0, 0, 0);
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __PYX_ERR(0, 156, __pyx_L1_error)
-      }
-      __pyx_L15:;
+        __Pyx_Raise(__pyx_t_4, 0, 0, 0);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __PYX_ERR(0, 151, __pyx_L1_error)
 
-      /* "_pyjq.pyx":157
- *             else:
+        /* "_pyjq.pyx":150
+ *         jval = jv_object()
+ *         for key, value in pyobj.items():
+ *             if not isinstance(key, str):             # <<<<<<<<<<<<<<
+ *                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
+ *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
+ */
+      }
+
+      /* "_pyjq.pyx":152
+ *             if not isinstance(key, str):
  *                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
  *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))             # <<<<<<<<<<<<<<
  *         return jval
@@ -2481,9 +2353,9 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
       __pyx_v_jval = jv_object_set(__pyx_v_jval, __pyx_f_5_pyjq_pyobj_to_jv(__pyx_v_key), __pyx_f_5_pyjq_pyobj_to_jv(__pyx_v_value));
     }
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "_pyjq.pyx":158
+    /* "_pyjq.pyx":153
  *                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
  *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
  *         return jval             # <<<<<<<<<<<<<<
@@ -2493,7 +2365,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
     __pyx_r = __pyx_v_jval;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":149
+    /* "_pyjq.pyx":147
  *             jval = jv_array_append(jval, pyobj_to_jv(item))
  *         return jval
  *     elif isinstance(pyobj, dict):             # <<<<<<<<<<<<<<
@@ -2502,18 +2374,18 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
   }
 
-  /* "_pyjq.pyx":159
+  /* "_pyjq.pyx":154
  *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
  *         return jval
  *     elif pyobj is None:             # <<<<<<<<<<<<<<
  *         return jv_null()
  *     else:
  */
-  __pyx_t_3 = (__pyx_v_pyobj == Py_None);
-  __pyx_t_8 = (__pyx_t_3 != 0);
-  if (likely(__pyx_t_8)) {
+  __pyx_t_2 = (__pyx_v_pyobj == Py_None);
+  __pyx_t_9 = (__pyx_t_2 != 0);
+  if (likely(__pyx_t_9)) {
 
-    /* "_pyjq.pyx":160
+    /* "_pyjq.pyx":155
  *         return jval
  *     elif pyobj is None:
  *         return jv_null()             # <<<<<<<<<<<<<<
@@ -2523,7 +2395,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
     __pyx_r = jv_null();
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":159
+    /* "_pyjq.pyx":154
  *             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
  *         return jval
  *     elif pyobj is None:             # <<<<<<<<<<<<<<
@@ -2532,7 +2404,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  */
   }
 
-  /* "_pyjq.pyx":162
+  /* "_pyjq.pyx":157
  *         return jv_null()
  *     else:
  *         raise TypeError("{!r} could not be converted to json".format(type(pyobj)))             # <<<<<<<<<<<<<<
@@ -2540,43 +2412,43 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
  * 
  */
   /*else*/ {
-    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_r_could_not_be_converted_to_jso, __pyx_n_s_format); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 162, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_r_could_not_be_converted_to_jso, __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_14);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
       if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
         __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_14, function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
       }
     }
-    __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_5, ((PyObject *)Py_TYPE(__pyx_v_pyobj))) : __Pyx_PyObject_CallOneArg(__pyx_t_14, ((PyObject *)Py_TYPE(__pyx_v_pyobj)));
+    __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, ((PyObject *)Py_TYPE(__pyx_v_pyobj))) : __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)Py_TYPE(__pyx_v_pyobj)));
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 162, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-    __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 162, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_14);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_Raise(__pyx_t_14, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-    __PYX_ERR(0, 162, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_Raise(__pyx_t_4, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __PYX_ERR(0, 157, __pyx_L1_error)
   }
 
-  /* "_pyjq.pyx":134
+  /* "_pyjq.pyx":132
  * 
  * 
  * cdef jv pyobj_to_jv(object pyobj):             # <<<<<<<<<<<<<<
- *     if isinstance(pyobj, six.text_type):
+ *     if isinstance(pyobj, str):
  *         pyobj = pyobj.encode('utf-8')
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_WriteUnraisable("_pyjq.pyobj_to_jv", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
@@ -2591,7 +2463,7 @@ static jv __pyx_f_5_pyjq_pyobj_to_jv(PyObject *__pyx_v_pyobj) {
   return __pyx_r;
 }
 
-/* "_pyjq.pyx":165
+/* "_pyjq.pyx":160
  * 
  * 
  * cdef void Script_error_cb(void* x, jv err):             # <<<<<<<<<<<<<<
@@ -2604,19 +2476,19 @@ static void __pyx_f_5_pyjq_Script_error_cb(void *__pyx_v_x, jv __pyx_v_err) {
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("Script_error_cb", 0);
 
-  /* "_pyjq.pyx":166
+  /* "_pyjq.pyx":161
  * 
  * cdef void Script_error_cb(void* x, jv err):
  *     Script._error_cb(<object>x, err)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  if (!(likely(((((PyObject *)__pyx_v_x)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5_pyjq_Script))))) __PYX_ERR(0, 166, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_5_pyjq_6Script__error_cb(((struct __pyx_obj_5_pyjq_Script *)((PyObject *)__pyx_v_x)), __pyx_v_err); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+  if (!(likely(((((PyObject *)__pyx_v_x)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5_pyjq_Script))))) __PYX_ERR(0, 161, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5_pyjq_6Script__error_cb(((struct __pyx_obj_5_pyjq_Script *)((PyObject *)__pyx_v_x)), __pyx_v_err); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":165
+  /* "_pyjq.pyx":160
  * 
  * 
  * cdef void Script_error_cb(void* x, jv err):             # <<<<<<<<<<<<<<
@@ -2633,7 +2505,7 @@ static void __pyx_f_5_pyjq_Script_error_cb(void *__pyx_v_x, jv __pyx_v_err) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "_pyjq.pyx":176
+/* "_pyjq.pyx":171
  *     cdef jq_state* _jq
  * 
  *     def __init__(self, const char* script, vars={}, library_paths=[]):             # <<<<<<<<<<<<<<
@@ -2687,7 +2559,7 @@ static int __pyx_pw_5_pyjq_6Script_1__init__(PyObject *__pyx_v_self, PyObject *_
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 176, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 171, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -2700,13 +2572,13 @@ static int __pyx_pw_5_pyjq_6Script_1__init__(PyObject *__pyx_v_self, PyObject *_
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_script = __Pyx_PyObject_AsString(values[0]); if (unlikely((!__pyx_v_script) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L3_error)
+    __pyx_v_script = __Pyx_PyObject_AsString(values[0]); if (unlikely((!__pyx_v_script) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L3_error)
     __pyx_v_vars = values[1];
     __pyx_v_library_paths = values[2];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 176, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 171, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("_pyjq.Script.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2736,14 +2608,14 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
   int __pyx_t_9;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "_pyjq.pyx":177
+  /* "_pyjq.pyx":172
  * 
  *     def __init__(self, const char* script, vars={}, library_paths=[]):
  *         self._errors = []             # <<<<<<<<<<<<<<
  *         self._jq = jq_init()
  *         if not self._jq:
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v_self->_errors);
@@ -2751,7 +2623,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
   __pyx_v_self->_errors = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":178
+  /* "_pyjq.pyx":173
  *     def __init__(self, const char* script, vars={}, library_paths=[]):
  *         self._errors = []
  *         self._jq = jq_init()             # <<<<<<<<<<<<<<
@@ -2760,7 +2632,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  */
   __pyx_v_self->_jq = jq_init();
 
-  /* "_pyjq.pyx":179
+  /* "_pyjq.pyx":174
  *         self._errors = []
  *         self._jq = jq_init()
  *         if not self._jq:             # <<<<<<<<<<<<<<
@@ -2770,20 +2642,20 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
   __pyx_t_2 = ((!(__pyx_v_self->_jq != 0)) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "_pyjq.pyx":180
+    /* "_pyjq.pyx":175
  *         self._jq = jq_init()
  *         if not self._jq:
  *             raise RuntimeError('Failed to initialize jq')             # <<<<<<<<<<<<<<
  *         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
  * 
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 180, __pyx_L1_error)
+    __PYX_ERR(0, 175, __pyx_L1_error)
 
-    /* "_pyjq.pyx":179
+    /* "_pyjq.pyx":174
  *         self._errors = []
  *         self._jq = jq_init()
  *         if not self._jq:             # <<<<<<<<<<<<<<
@@ -2792,7 +2664,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  */
   }
 
-  /* "_pyjq.pyx":181
+  /* "_pyjq.pyx":176
  *         if not self._jq:
  *             raise RuntimeError('Failed to initialize jq')
  *         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)             # <<<<<<<<<<<<<<
@@ -2801,7 +2673,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  */
   jq_set_error_cb(__pyx_v_self->_jq, __pyx_f_5_pyjq_Script_error_cb, ((void *)__pyx_v_self));
 
-  /* "_pyjq.pyx":183
+  /* "_pyjq.pyx":178
  *         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
  * 
  *         args = pyobj_to_jv([             # <<<<<<<<<<<<<<
@@ -2809,10 +2681,10 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  *             for k, v in vars.items()
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L6_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L6_error)
     __Pyx_GOTREF(__pyx_t_1);
 
-    /* "_pyjq.pyx":185
+    /* "_pyjq.pyx":180
  *         args = pyobj_to_jv([
  *             dict(name=k, value=v)
  *             for k, v in vars.items()             # <<<<<<<<<<<<<<
@@ -2822,9 +2694,9 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
     __pyx_t_4 = 0;
     if (unlikely(__pyx_v_vars == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
-      __PYX_ERR(0, 185, __pyx_L6_error)
+      __PYX_ERR(0, 180, __pyx_L6_error)
     }
-    __pyx_t_7 = __Pyx_dict_iterator(__pyx_v_vars, 0, __pyx_n_s_items, (&__pyx_t_5), (&__pyx_t_6)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 185, __pyx_L6_error)
+    __pyx_t_7 = __Pyx_dict_iterator(__pyx_v_vars, 0, __pyx_n_s_items, (&__pyx_t_5), (&__pyx_t_6)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L6_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_XDECREF(__pyx_t_3);
     __pyx_t_3 = __pyx_t_7;
@@ -2832,7 +2704,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
     while (1) {
       __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_3, __pyx_t_5, &__pyx_t_4, &__pyx_t_7, &__pyx_t_8, NULL, __pyx_t_6);
       if (unlikely(__pyx_t_9 == 0)) break;
-      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 185, __pyx_L6_error)
+      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 180, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_k, __pyx_t_7);
@@ -2840,18 +2712,18 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_v, __pyx_t_8);
       __pyx_t_8 = 0;
 
-      /* "_pyjq.pyx":184
+      /* "_pyjq.pyx":179
  * 
  *         args = pyobj_to_jv([
  *             dict(name=k, value=v)             # <<<<<<<<<<<<<<
  *             for k, v in vars.items()
  *         ])
  */
-      __pyx_t_8 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 184, __pyx_L6_error)
+      __pyx_t_8 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 179, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_8);
-      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_name, __pyx_7genexpr__pyx_v_k) < 0) __PYX_ERR(0, 184, __pyx_L6_error)
-      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_value, __pyx_7genexpr__pyx_v_v) < 0) __PYX_ERR(0, 184, __pyx_L6_error)
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 183, __pyx_L6_error)
+      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_name, __pyx_7genexpr__pyx_v_k) < 0) __PYX_ERR(0, 179, __pyx_L6_error)
+      if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_value, __pyx_7genexpr__pyx_v_v) < 0) __PYX_ERR(0, 179, __pyx_L6_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 178, __pyx_L6_error)
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2865,7 +2737,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
     __pyx_L9_exit_scope:;
   } /* exit inner scope */
 
-  /* "_pyjq.pyx":183
+  /* "_pyjq.pyx":178
  *         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
  * 
  *         args = pyobj_to_jv([             # <<<<<<<<<<<<<<
@@ -2875,7 +2747,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
   __pyx_v_args = __pyx_f_5_pyjq_pyobj_to_jv(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":188
+  /* "_pyjq.pyx":183
  *         ])
  * 
  *         jq_set_attr(             # <<<<<<<<<<<<<<
@@ -2884,7 +2756,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  */
   jq_set_attr(__pyx_v_self->_jq, __pyx_f_5_pyjq_pyobj_to_jv(__pyx_n_u_JQ_LIBRARY_PATH), __pyx_f_5_pyjq_pyobj_to_jv(__pyx_v_library_paths));
 
-  /* "_pyjq.pyx":194
+  /* "_pyjq.pyx":189
  *         )
  * 
  *         if not jq_compile_args(self._jq, script, args):             # <<<<<<<<<<<<<<
@@ -2894,7 +2766,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
   __pyx_t_2 = ((!(jq_compile_args(__pyx_v_self->_jq, __pyx_v_script, __pyx_v_args) != 0)) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "_pyjq.pyx":195
+    /* "_pyjq.pyx":190
  * 
  *         if not jq_compile_args(self._jq, script, args):
  *             raise ValueError("\n".join(self._errors))             # <<<<<<<<<<<<<<
@@ -2903,17 +2775,17 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  */
     __pyx_t_1 = __pyx_v_self->_errors;
     __Pyx_INCREF(__pyx_t_1);
-    __pyx_t_3 = PyUnicode_Join(__pyx_kp_u__4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 195, __pyx_L1_error)
+    __pyx_t_3 = PyUnicode_Join(__pyx_kp_u__4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 190, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 195, __pyx_L1_error)
+    __PYX_ERR(0, 190, __pyx_L1_error)
 
-    /* "_pyjq.pyx":194
+    /* "_pyjq.pyx":189
  *         )
  * 
  *         if not jq_compile_args(self._jq, script, args):             # <<<<<<<<<<<<<<
@@ -2922,7 +2794,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
  */
   }
 
-  /* "_pyjq.pyx":176
+  /* "_pyjq.pyx":171
  *     cdef jq_state* _jq
  * 
  *     def __init__(self, const char* script, vars={}, library_paths=[]):             # <<<<<<<<<<<<<<
@@ -2947,7 +2819,7 @@ static int __pyx_pf_5_pyjq_6Script___init__(struct __pyx_obj_5_pyjq_Script *__py
   return __pyx_r;
 }
 
-/* "_pyjq.pyx":197
+/* "_pyjq.pyx":192
  *             raise ValueError("\n".join(self._errors))
  * 
  *     cdef _error_cb(self, jv err):             # <<<<<<<<<<<<<<
@@ -2963,7 +2835,7 @@ static PyObject *__pyx_f_5_pyjq_6Script__error_cb(struct __pyx_obj_5_pyjq_Script
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("_error_cb", 0);
 
-  /* "_pyjq.pyx":198
+  /* "_pyjq.pyx":193
  * 
  *     cdef _error_cb(self, jv err):
  *         self._errors.append(jv_string_value(err).decode('utf-8'))             # <<<<<<<<<<<<<<
@@ -2971,12 +2843,12 @@ static PyObject *__pyx_f_5_pyjq_6Script__error_cb(struct __pyx_obj_5_pyjq_Script
  *     def __dealloc__(self):
  */
   __pyx_t_1 = jv_string_value(__pyx_v_err);
-  __pyx_t_2 = __Pyx_decode_c_string(__pyx_t_1, 0, strlen(__pyx_t_1), NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_decode_c_string(__pyx_t_1, 0, strlen(__pyx_t_1), NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_Append(__pyx_v_self->_errors, __pyx_t_2); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Append(__pyx_v_self->_errors, __pyx_t_2); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 193, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "_pyjq.pyx":197
+  /* "_pyjq.pyx":192
  *             raise ValueError("\n".join(self._errors))
  * 
  *     cdef _error_cb(self, jv err):             # <<<<<<<<<<<<<<
@@ -2997,7 +2869,7 @@ static PyObject *__pyx_f_5_pyjq_6Script__error_cb(struct __pyx_obj_5_pyjq_Script
   return __pyx_r;
 }
 
-/* "_pyjq.pyx":200
+/* "_pyjq.pyx":195
  *         self._errors.append(jv_string_value(err).decode('utf-8'))
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -3020,7 +2892,7 @@ static void __pyx_pf_5_pyjq_6Script_2__dealloc__(struct __pyx_obj_5_pyjq_Script 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "_pyjq.pyx":201
+  /* "_pyjq.pyx":196
  * 
  *     def __dealloc__(self):
  *         jq_teardown(&self._jq)             # <<<<<<<<<<<<<<
@@ -3029,7 +2901,7 @@ static void __pyx_pf_5_pyjq_6Script_2__dealloc__(struct __pyx_obj_5_pyjq_Script 
  */
   jq_teardown((&__pyx_v_self->_jq));
 
-  /* "_pyjq.pyx":200
+  /* "_pyjq.pyx":195
  *         self._errors.append(jv_string_value(err).decode('utf-8'))
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -3041,7 +2913,7 @@ static void __pyx_pf_5_pyjq_6Script_2__dealloc__(struct __pyx_obj_5_pyjq_Script 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "_pyjq.pyx":203
+/* "_pyjq.pyx":198
  *         jq_teardown(&self._jq)
  * 
  *     def all(self, pyobj):             # <<<<<<<<<<<<<<
@@ -3088,7 +2960,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
   PyObject *__pyx_t_14 = NULL;
   __Pyx_RefNannySetupContext("all", 0);
 
-  /* "_pyjq.pyx":205
+  /* "_pyjq.pyx":200
  *     def all(self, pyobj):
  *         "Transform object by jq script, returning all results as list"
  *         cdef jv value = pyobj_to_jv(pyobj)             # <<<<<<<<<<<<<<
@@ -3097,7 +2969,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
   __pyx_v_value = __pyx_f_5_pyjq_pyobj_to_jv(__pyx_v_pyobj);
 
-  /* "_pyjq.pyx":206
+  /* "_pyjq.pyx":201
  *         "Transform object by jq script, returning all results as list"
  *         cdef jv value = pyobj_to_jv(pyobj)
  *         jq_start(self._jq, value, 0)             # <<<<<<<<<<<<<<
@@ -3106,19 +2978,19 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
   jq_start(__pyx_v_self->_jq, __pyx_v_value, 0);
 
-  /* "_pyjq.pyx":207
+  /* "_pyjq.pyx":202
  *         cdef jv value = pyobj_to_jv(pyobj)
  *         jq_start(self._jq, value, 0)
  *         cdef list output = []             # <<<<<<<<<<<<<<
  * 
  *         while True:
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_output = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":209
+  /* "_pyjq.pyx":204
  *         cdef list output = []
  * 
  *         while True:             # <<<<<<<<<<<<<<
@@ -3127,7 +2999,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
   while (1) {
 
-    /* "_pyjq.pyx":210
+    /* "_pyjq.pyx":205
  * 
  *         while True:
  *             result = jq_next(self._jq)             # <<<<<<<<<<<<<<
@@ -3136,7 +3008,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
     __pyx_v_result = jq_next(__pyx_v_self->_jq);
 
-    /* "_pyjq.pyx":211
+    /* "_pyjq.pyx":206
  *         while True:
  *             result = jq_next(self._jq)
  *             try:             # <<<<<<<<<<<<<<
@@ -3145,7 +3017,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
     /*try:*/ {
 
-      /* "_pyjq.pyx":212
+      /* "_pyjq.pyx":207
  *             result = jq_next(self._jq)
  *             try:
  *                 kind = jv_get_kind(result)             # <<<<<<<<<<<<<<
@@ -3154,7 +3026,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
       __pyx_v_kind = jv_get_kind(__pyx_v_result);
 
-      /* "_pyjq.pyx":213
+      /* "_pyjq.pyx":208
  *             try:
  *                 kind = jv_get_kind(result)
  *                 if kind == JV_KIND_INVALID:             # <<<<<<<<<<<<<<
@@ -3164,7 +3036,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
       __pyx_t_2 = ((__pyx_v_kind == JV_KIND_INVALID) != 0);
       if (__pyx_t_2) {
 
-        /* "_pyjq.pyx":214
+        /* "_pyjq.pyx":209
  *                 kind = jv_get_kind(result)
  *                 if kind == JV_KIND_INVALID:
  *                     if not jv_invalid_has_msg(jv_copy(result)):             # <<<<<<<<<<<<<<
@@ -3174,7 +3046,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
         __pyx_t_2 = ((!(jv_invalid_has_msg(jv_copy(__pyx_v_result)) != 0)) != 0);
         if (__pyx_t_2) {
 
-          /* "_pyjq.pyx":215
+          /* "_pyjq.pyx":210
  *                 if kind == JV_KIND_INVALID:
  *                     if not jv_invalid_has_msg(jv_copy(result)):
  *                         break             # <<<<<<<<<<<<<<
@@ -3183,7 +3055,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
           goto __pyx_L6_break;
 
-          /* "_pyjq.pyx":214
+          /* "_pyjq.pyx":209
  *                 kind = jv_get_kind(result)
  *                 if kind == JV_KIND_INVALID:
  *                     if not jv_invalid_has_msg(jv_copy(result)):             # <<<<<<<<<<<<<<
@@ -3192,7 +3064,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
         }
 
-        /* "_pyjq.pyx":216
+        /* "_pyjq.pyx":211
  *                     if not jv_invalid_has_msg(jv_copy(result)):
  *                         break
  *                     m = jv_invalid_get_msg(jv_copy(result))             # <<<<<<<<<<<<<<
@@ -3201,29 +3073,29 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
         __pyx_v_m = jv_invalid_get_msg(jv_copy(__pyx_v_result));
 
-        /* "_pyjq.pyx":217
+        /* "_pyjq.pyx":212
  *                         break
  *                     m = jv_invalid_get_msg(jv_copy(result))
  *                     e = str(jv_to_pyobj(m))             # <<<<<<<<<<<<<<
  *                     raise ScriptRuntimeError(e)
  *                 else:
  */
-        __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_m); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 217, __pyx_L8_error)
+        __pyx_t_1 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_m); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 212, __pyx_L8_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 217, __pyx_L8_error)
+        __pyx_t_3 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 212, __pyx_L8_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_v_e = __pyx_t_3;
         __pyx_t_3 = 0;
 
-        /* "_pyjq.pyx":218
+        /* "_pyjq.pyx":213
  *                     m = jv_invalid_get_msg(jv_copy(result))
  *                     e = str(jv_to_pyobj(m))
  *                     raise ScriptRuntimeError(e)             # <<<<<<<<<<<<<<
  *                 else:
  *                     output.append(jv_to_pyobj(result))
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_ScriptRuntimeError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 218, __pyx_L8_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_ScriptRuntimeError); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L8_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_t_4 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
@@ -3237,14 +3109,14 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
         }
         __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_4, __pyx_v_e) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_e);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 218, __pyx_L8_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 213, __pyx_L8_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_Raise(__pyx_t_3, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __PYX_ERR(0, 218, __pyx_L8_error)
+        __PYX_ERR(0, 213, __pyx_L8_error)
 
-        /* "_pyjq.pyx":213
+        /* "_pyjq.pyx":208
  *             try:
  *                 kind = jv_get_kind(result)
  *                 if kind == JV_KIND_INVALID:             # <<<<<<<<<<<<<<
@@ -3253,7 +3125,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  */
       }
 
-      /* "_pyjq.pyx":220
+      /* "_pyjq.pyx":215
  *                     raise ScriptRuntimeError(e)
  *                 else:
  *                     output.append(jv_to_pyobj(result))             # <<<<<<<<<<<<<<
@@ -3261,14 +3133,14 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
  *                 jv_free(result)
  */
       /*else*/ {
-        __pyx_t_3 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_result); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 220, __pyx_L8_error)
+        __pyx_t_3 = __pyx_f_5_pyjq_jv_to_pyobj(__pyx_v_result); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L8_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_output, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 220, __pyx_L8_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_output, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 215, __pyx_L8_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
     }
 
-    /* "_pyjq.pyx":222
+    /* "_pyjq.pyx":217
  *                     output.append(jv_to_pyobj(result))
  *             finally:
  *                 jv_free(result)             # <<<<<<<<<<<<<<
@@ -3323,7 +3195,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
   }
   __pyx_L4_break:;
 
-  /* "_pyjq.pyx":223
+  /* "_pyjq.pyx":218
  *             finally:
  *                 jv_free(result)
  *         return output             # <<<<<<<<<<<<<<
@@ -3335,7 +3207,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
   __pyx_r = __pyx_v_output;
   goto __pyx_L0;
 
-  /* "_pyjq.pyx":203
+  /* "_pyjq.pyx":198
  *         jq_teardown(&self._jq)
  * 
  *     def all(self, pyobj):             # <<<<<<<<<<<<<<
@@ -3358,7 +3230,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_4all(struct __pyx_obj_5_pyjq_Script *__
   return __pyx_r;
 }
 
-/* "_pyjq.pyx":227
+/* "_pyjq.pyx":222
  *     apply = all
  * 
  *     def first(self, value, default=None):             # <<<<<<<<<<<<<<
@@ -3403,7 +3275,7 @@ static PyObject *__pyx_pw_5_pyjq_6Script_7first(PyObject *__pyx_v_self, PyObject
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "first") < 0)) __PYX_ERR(0, 227, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "first") < 0)) __PYX_ERR(0, 222, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3419,7 +3291,7 @@ static PyObject *__pyx_pw_5_pyjq_6Script_7first(PyObject *__pyx_v_self, PyObject
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("first", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 227, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("first", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 222, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("_pyjq.Script.first", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3443,14 +3315,14 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
   int __pyx_t_5;
   __Pyx_RefNannySetupContext("first", 0);
 
-  /* "_pyjq.pyx":232
+  /* "_pyjq.pyx":227
  *         Return default if result is empty.
  *         """
  *         ret = self.apply(value)             # <<<<<<<<<<<<<<
  *         if not ret:
  *             return default
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_apply); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_apply); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -3464,24 +3336,24 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_value) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_value);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 232, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_ret = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":233
+  /* "_pyjq.pyx":228
  *         """
  *         ret = self.apply(value)
  *         if not ret:             # <<<<<<<<<<<<<<
  *             return default
  *         return ret[0]
  */
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_ret); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_ret); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 228, __pyx_L1_error)
   __pyx_t_5 = ((!__pyx_t_4) != 0);
   if (__pyx_t_5) {
 
-    /* "_pyjq.pyx":234
+    /* "_pyjq.pyx":229
  *         ret = self.apply(value)
  *         if not ret:
  *             return default             # <<<<<<<<<<<<<<
@@ -3493,7 +3365,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
     __pyx_r = __pyx_v_default;
     goto __pyx_L0;
 
-    /* "_pyjq.pyx":233
+    /* "_pyjq.pyx":228
  *         """
  *         ret = self.apply(value)
  *         if not ret:             # <<<<<<<<<<<<<<
@@ -3502,7 +3374,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
  */
   }
 
-  /* "_pyjq.pyx":235
+  /* "_pyjq.pyx":230
  *         if not ret:
  *             return default
  *         return ret[0]             # <<<<<<<<<<<<<<
@@ -3510,13 +3382,13 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
  *     def one(self, value):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_ret, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_ret, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_pyjq.pyx":227
+  /* "_pyjq.pyx":222
  *     apply = all
  * 
  *     def first(self, value, default=None):             # <<<<<<<<<<<<<<
@@ -3538,7 +3410,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
   return __pyx_r;
 }
 
-/* "_pyjq.pyx":237
+/* "_pyjq.pyx":232
  *         return ret[0]
  * 
  *     def one(self, value):             # <<<<<<<<<<<<<<
@@ -3572,14 +3444,14 @@ static PyObject *__pyx_pf_5_pyjq_6Script_8one(struct __pyx_obj_5_pyjq_Script *__
   Py_ssize_t __pyx_t_6;
   __Pyx_RefNannySetupContext("one", 0);
 
-  /* "_pyjq.pyx":242
+  /* "_pyjq.pyx":237
  *         Raise ValueError unless results does not include exactly one element.
  *         """
  *         ret = self.apply(value)             # <<<<<<<<<<<<<<
  *         if not ret:
  *             raise IndexError("Result of jq is empty")
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_apply); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_apply); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -3593,37 +3465,37 @@ static PyObject *__pyx_pf_5_pyjq_6Script_8one(struct __pyx_obj_5_pyjq_Script *__
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_value) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_value);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_ret = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":243
+  /* "_pyjq.pyx":238
  *         """
  *         ret = self.apply(value)
  *         if not ret:             # <<<<<<<<<<<<<<
  *             raise IndexError("Result of jq is empty")
  *         elif len(ret) > 1:
  */
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_ret); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 243, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_ret); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 238, __pyx_L1_error)
   __pyx_t_5 = ((!__pyx_t_4) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "_pyjq.pyx":244
+    /* "_pyjq.pyx":239
  *         ret = self.apply(value)
  *         if not ret:
  *             raise IndexError("Result of jq is empty")             # <<<<<<<<<<<<<<
  *         elif len(ret) > 1:
  *             raise IndexError("Result of jq have multiple elements")
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 244, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 239, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 244, __pyx_L1_error)
+    __PYX_ERR(0, 239, __pyx_L1_error)
 
-    /* "_pyjq.pyx":243
+    /* "_pyjq.pyx":238
  *         """
  *         ret = self.apply(value)
  *         if not ret:             # <<<<<<<<<<<<<<
@@ -3632,30 +3504,30 @@ static PyObject *__pyx_pf_5_pyjq_6Script_8one(struct __pyx_obj_5_pyjq_Script *__
  */
   }
 
-  /* "_pyjq.pyx":245
+  /* "_pyjq.pyx":240
  *         if not ret:
  *             raise IndexError("Result of jq is empty")
  *         elif len(ret) > 1:             # <<<<<<<<<<<<<<
  *             raise IndexError("Result of jq have multiple elements")
  *         return ret[0]
  */
-  __pyx_t_6 = PyObject_Length(__pyx_v_ret); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 245, __pyx_L1_error)
+  __pyx_t_6 = PyObject_Length(__pyx_v_ret); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 240, __pyx_L1_error)
   __pyx_t_5 = ((__pyx_t_6 > 1) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "_pyjq.pyx":246
+    /* "_pyjq.pyx":241
  *             raise IndexError("Result of jq is empty")
  *         elif len(ret) > 1:
  *             raise IndexError("Result of jq have multiple elements")             # <<<<<<<<<<<<<<
  *         return ret[0]
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 246, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 241, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 246, __pyx_L1_error)
+    __PYX_ERR(0, 241, __pyx_L1_error)
 
-    /* "_pyjq.pyx":245
+    /* "_pyjq.pyx":240
  *         if not ret:
  *             raise IndexError("Result of jq is empty")
  *         elif len(ret) > 1:             # <<<<<<<<<<<<<<
@@ -3664,19 +3536,19 @@ static PyObject *__pyx_pf_5_pyjq_6Script_8one(struct __pyx_obj_5_pyjq_Script *__
  */
   }
 
-  /* "_pyjq.pyx":247
+  /* "_pyjq.pyx":242
  *         elif len(ret) > 1:
  *             raise IndexError("Result of jq have multiple elements")
  *         return ret[0]             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_ret, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_ret, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_pyjq.pyx":237
+  /* "_pyjq.pyx":232
  *         return ret[0]
  * 
  *     def one(self, value):             # <<<<<<<<<<<<<<
@@ -3980,8 +3852,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
   {&__pyx_n_u_JQ_LIBRARY_PATH, __pyx_k_JQ_LIBRARY_PATH, sizeof(__pyx_k_JQ_LIBRARY_PATH), 0, 1, 0, 1},
   {&__pyx_kp_u_Key_of_json_object_must_be_a_str, __pyx_k_Key_of_json_object_must_be_a_str, sizeof(__pyx_k_Key_of_json_object_must_be_a_str), 0, 1, 0, 0},
-  {&__pyx_n_s_OrderedDict, __pyx_k_OrderedDict, sizeof(__pyx_k_OrderedDict), 0, 0, 1, 1},
-  {&__pyx_n_s_PY2, __pyx_k_PY2, sizeof(__pyx_k_PY2), 0, 0, 1, 1},
   {&__pyx_kp_u_Result_of_jq_have_multiple_eleme, __pyx_k_Result_of_jq_have_multiple_eleme, sizeof(__pyx_k_Result_of_jq_have_multiple_eleme), 0, 1, 0, 0},
   {&__pyx_kp_u_Result_of_jq_is_empty, __pyx_k_Result_of_jq_is_empty, sizeof(__pyx_k_Result_of_jq_is_empty), 0, 1, 0, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
@@ -3993,9 +3863,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_all, __pyx_k_all, sizeof(__pyx_k_all), 0, 0, 1, 1},
   {&__pyx_n_s_append, __pyx_k_append, sizeof(__pyx_k_append), 0, 0, 1, 1},
   {&__pyx_n_s_apply, __pyx_k_apply, sizeof(__pyx_k_apply), 0, 0, 1, 1},
-  {&__pyx_n_s_binary_type, __pyx_k_binary_type, sizeof(__pyx_k_binary_type), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
-  {&__pyx_n_s_collections, __pyx_k_collections, sizeof(__pyx_k_collections), 0, 0, 1, 1},
   {&__pyx_n_s_default, __pyx_k_default, sizeof(__pyx_k_default), 0, 0, 1, 1},
   {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -4024,22 +3892,19 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_self__jq_cannot_be_converted_to, __pyx_k_self__jq_cannot_be_converted_to, sizeof(__pyx_k_self__jq_cannot_be_converted_to), 0, 0, 1, 0},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
-  {&__pyx_n_s_six, __pyx_k_six, sizeof(__pyx_k_six), 0, 0, 1, 1},
-  {&__pyx_n_s_string_types, __pyx_k_string_types, sizeof(__pyx_k_string_types), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_text_type, __pyx_k_text_type, sizeof(__pyx_k_text_type), 0, 0, 1, 1},
   {&__pyx_kp_u_utf_8, __pyx_k_utf_8, sizeof(__pyx_k_utf_8), 0, 1, 0, 0},
   {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
   {&__pyx_n_s_vars, __pyx_k_vars, sizeof(__pyx_k_vars), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 114, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 146, __pyx_L1_error)
-  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 156, __pyx_L1_error)
-  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(0, 180, __pyx_L1_error)
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 195, __pyx_L1_error)
-  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(0, 239, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -4049,35 +3914,35 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "_pyjq.pyx":180
+  /* "_pyjq.pyx":175
  *         self._jq = jq_init()
  *         if not self._jq:
  *             raise RuntimeError('Failed to initialize jq')             # <<<<<<<<<<<<<<
  *         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
  * 
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_initialize_jq); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_u_Failed_to_initialize_jq); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "_pyjq.pyx":244
+  /* "_pyjq.pyx":239
  *         ret = self.apply(value)
  *         if not ret:
  *             raise IndexError("Result of jq is empty")             # <<<<<<<<<<<<<<
  *         elif len(ret) > 1:
  *             raise IndexError("Result of jq have multiple elements")
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Result_of_jq_is_empty); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Result_of_jq_is_empty); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "_pyjq.pyx":246
+  /* "_pyjq.pyx":241
  *             raise IndexError("Result of jq is empty")
  *         elif len(ret) > 1:
  *             raise IndexError("Result of jq have multiple elements")             # <<<<<<<<<<<<<<
  *         return ret[0]
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u_Result_of_jq_have_multiple_eleme); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u_Result_of_jq_have_multiple_eleme); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 241, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
@@ -4153,16 +4018,16 @@ static int __Pyx_modinit_type_init_code(void) {
   /*--- Type init code ---*/
   __pyx_vtabptr_5_pyjq_Script = &__pyx_vtable_5_pyjq_Script;
   __pyx_vtable_5_pyjq_Script._error_cb = (PyObject *(*)(struct __pyx_obj_5_pyjq_Script *, jv))__pyx_f_5_pyjq_6Script__error_cb;
-  if (PyType_Ready(&__pyx_type_5_pyjq_Script) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_5_pyjq_Script) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_5_pyjq_Script.tp_print = 0;
   #endif
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_5_pyjq_Script.tp_dictoffset && __pyx_type_5_pyjq_Script.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_5_pyjq_Script.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (__Pyx_SetVtable(__pyx_type_5_pyjq_Script.tp_dict, __pyx_vtabptr_5_pyjq_Script) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Script, (PyObject *)&__pyx_type_5_pyjq_Script) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_5_pyjq_Script) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_5_pyjq_Script.tp_dict, __pyx_vtabptr_5_pyjq_Script) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Script, (PyObject *)&__pyx_type_5_pyjq_Script) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_5_pyjq_Script) < 0) __PYX_ERR(0, 166, __pyx_L1_error)
   __pyx_ptype_5_pyjq_Script = &__pyx_type_5_pyjq_Script;
   __Pyx_RefNannyFinishContext();
   return 0;
@@ -4400,99 +4265,66 @@ if (!__Pyx_RefNanny) {
  * 
  * import os             # <<<<<<<<<<<<<<
  * 
- * from collections import OrderedDict
+ * 
  */
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_os, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_os, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":8
- * import os
- * 
- * from collections import OrderedDict             # <<<<<<<<<<<<<<
- * import six
- * 
- */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_s_OrderedDict);
-  __Pyx_GIVEREF(__pyx_n_s_OrderedDict);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_OrderedDict);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_collections, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_OrderedDict); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_OrderedDict, __pyx_t_1) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
   /* "_pyjq.pyx":9
  * 
- * from collections import OrderedDict
- * import six             # <<<<<<<<<<<<<<
- * 
- * class ScriptRuntimeError(Exception):
- */
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_six, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_six, __pyx_t_2) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "_pyjq.pyx":11
- * import six
  * 
  * class ScriptRuntimeError(Exception):             # <<<<<<<<<<<<<<
  *     """
  *     Exception thrown when a script calls error()
  */
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 11, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
   __Pyx_GIVEREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
-  PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
-  __pyx_t_1 = __Pyx_CalculateMetaclass(NULL, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_1, __pyx_t_2, __pyx_n_s_ScriptRuntimeError, __pyx_n_s_ScriptRuntimeError, (PyObject *) NULL, __pyx_n_s_pyjq, __pyx_kp_s_Exception_thrown_when_a_script); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 11, __pyx_L1_error)
+  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
+  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_ScriptRuntimeError, __pyx_n_s_ScriptRuntimeError, (PyObject *) NULL, __pyx_n_s_pyjq, __pyx_kp_s_Exception_thrown_when_a_script); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_1, __pyx_n_s_ScriptRuntimeError, __pyx_t_2, __pyx_t_3, NULL, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_ScriptRuntimeError, __pyx_t_1, __pyx_t_3, NULL, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ScriptRuntimeError, __pyx_t_4) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ScriptRuntimeError, __pyx_t_4) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":176
+  /* "_pyjq.pyx":171
  *     cdef jq_state* _jq
  * 
  *     def __init__(self, const char* script, vars={}, library_paths=[]):             # <<<<<<<<<<<<<<
  *         self._errors = []
  *         self._jq = jq_init()
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_k_ = __pyx_t_2;
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_k__2 = __pyx_t_2;
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_k_ = __pyx_t_1;
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_k__2 = __pyx_t_1;
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
 
-  /* "_pyjq.pyx":225
+  /* "_pyjq.pyx":220
  *         return output
  * 
  *     apply = all             # <<<<<<<<<<<<<<
  * 
  *     def first(self, value, default=None):
  */
-  __Pyx_GetNameInClass(__pyx_t_2, (PyObject *)__pyx_ptype_5_pyjq_Script, __pyx_n_s_all); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 225, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_ptype_5_pyjq_Script->tp_dict, __pyx_n_s_apply, __pyx_t_2) < 0) __PYX_ERR(0, 225, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_GetNameInClass(__pyx_t_1, (PyObject *)__pyx_ptype_5_pyjq_Script, __pyx_n_s_all); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem((PyObject *)__pyx_ptype_5_pyjq_Script->tp_dict, __pyx_n_s_apply, __pyx_t_1) < 0) __PYX_ERR(0, 220, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_ptype_5_pyjq_Script);
 
   /* "_pyjq.pyx":1
@@ -4500,10 +4332,10 @@ if (!__Pyx_RefNanny) {
  * """
  * Python binding for jq
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -4611,66 +4443,28 @@ static CYTHON_INLINE PyObject* __Pyx_decode_c_string(
     }
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
     }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
 }
 #endif
-
-/* GetModuleGlobalName */
-#if CYTHON_USE_DICT_VERSIONS
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
-#else
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
-#endif
-{
-    PyObject *result;
-#if !CYTHON_AVOID_BORROWED_REFS
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    } else if (unlikely(PyErr_Occurred())) {
-        return NULL;
-    }
-#else
-    result = PyDict_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-#endif
-#else
-    result = PyObject_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-    PyErr_Clear();
-#endif
-    return __Pyx_GetBuiltinName(name);
-}
 
 /* PyFunctionFastCall */
 #if CYTHON_FAST_PYCALL
@@ -4811,6 +4605,35 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg
 }
 #endif
 
+/* PyObjectCall2Args */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
+    PyObject *args, *result = NULL;
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyFunction_FastCall(function, args, 2);
+    }
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyCFunction_FastCall(function, args, 2);
+    }
+    #endif
+    args = PyTuple_New(2);
+    if (unlikely(!args)) goto done;
+    Py_INCREF(arg1);
+    PyTuple_SET_ITEM(args, 0, arg1);
+    Py_INCREF(arg2);
+    PyTuple_SET_ITEM(args, 1, arg2);
+    Py_INCREF(function);
+    result = __Pyx_PyObject_Call(function, args, NULL);
+    Py_DECREF(args);
+    Py_DECREF(function);
+done:
+    return result;
+}
+
 /* PyObjectCallMethO */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
@@ -4828,51 +4651,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
             "NULL result without error in PyObject_Call");
     }
     return result;
-}
-#endif
-
-/* PyObjectCallNoArg */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
-#if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(func)) {
-        return __Pyx_PyFunction_FastCall(func, NULL, 0);
-    }
-#endif
-#ifdef __Pyx_CyFunction_USED
-    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
-#else
-    if (likely(PyCFunction_Check(func)))
-#endif
-    {
-        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
-            return __Pyx_PyObject_CallMethO(func, NULL);
-        }
-    }
-    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
-}
-#endif
-
-/* PyCFunctionFastCall */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
-    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
-    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
-    PyObject *self = PyCFunction_GET_SELF(func);
-    int flags = PyCFunction_GET_FLAGS(func);
-    assert(PyCFunction_Check(func));
-    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
-    assert(nargs >= 0);
-    assert(nargs == 0 || args != NULL);
-    /* _PyCFunction_FastCallDict() must not be called with an exception set,
-       because it may clear it (directly or indirectly) and so the
-       caller loses its exception */
-    assert(!PyErr_Occurred());
-    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
-        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
-    } else {
-        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
-    }
 }
 #endif
 
@@ -4915,35 +4693,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
     return result;
 }
 #endif
-
-/* PyObjectCall2Args */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
-    PyObject *args, *result = NULL;
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyFunction_FastCall(function, args, 2);
-    }
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyCFunction_FastCall(function, args, 2);
-    }
-    #endif
-    args = PyTuple_New(2);
-    if (unlikely(!args)) goto done;
-    Py_INCREF(arg1);
-    PyTuple_SET_ITEM(args, 0, arg1);
-    Py_INCREF(arg2);
-    PyTuple_SET_ITEM(args, 1, arg2);
-    Py_INCREF(function);
-    result = __Pyx_PyObject_Call(function, args, NULL);
-    Py_DECREF(args);
-    Py_DECREF(function);
-done:
-    return result;
-}
 
 /* PyIntBinop */
 #if !CYTHON_COMPILING_IN_PYPY
@@ -5103,6 +4852,28 @@ static CYTHON_INLINE int __Pyx_IterFinish(void) {
     return 0;
 #endif
 }
+
+/* PyObjectCallNoArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, NULL, 0);
+    }
+#endif
+#ifdef __Pyx_CyFunction_USED
+    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
+#else
+    if (likely(PyCFunction_Check(func)))
+#endif
+    {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
+            return __Pyx_PyObject_CallMethO(func, NULL);
+        }
+    }
+    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
+}
+#endif
 
 /* PyObjectGetMethod */
 static int __Pyx_PyObject_GetMethod(PyObject *obj, PyObject *name, PyObject **method) {
@@ -5833,6 +5604,67 @@ static CYTHON_INLINE int __Pyx_PyObject_Append(PyObject* L, PyObject* x) {
     return 0;
 }
 
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
+
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
+
 /* GetException */
 #if CYTHON_FAST_THREAD_STATE
 static int __Pyx__GetException(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb)
@@ -6292,20 +6124,6 @@ bad:
     Py_XDECREF(empty_list);
     Py_XDECREF(empty_dict);
     return module;
-}
-
-/* ImportFrom */
-static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
-    PyObject* value = __Pyx_PyObject_GetAttrStr(module, name);
-    if (unlikely(!value) && PyErr_ExceptionMatches(PyExc_AttributeError)) {
-        PyErr_Format(PyExc_ImportError,
-        #if PY_MAJOR_VERSION < 3
-            "cannot import name %.230s", PyString_AS_STRING(name));
-        #else
-            "cannot import name %S", name);
-        #endif
-    }
-    return value;
 }
 
 /* CalculateMetaclass */
