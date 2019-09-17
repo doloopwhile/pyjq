@@ -110,7 +110,7 @@ cdef object jv_to_pyobj(jv jval):
     elif kind == JV_KIND_STRING:
         return jv_string_value(jval).decode('utf-8')
     elif kind == JV_KIND_ARRAY:
-        alist = list()
+        alist = []
         for i in range(jv_array_length(jv_copy(jval))):
             value = jv_array_get(jv_copy(jval), i)
             alist.append(jv_to_pyobj(value))
