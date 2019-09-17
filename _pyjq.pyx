@@ -110,13 +110,22 @@ cdef object jv_to_pyobj(jv jval):
     elif kind == JV_KIND_STRING:
         return jv_string_value(jval).decode('utf-8')
     elif kind == JV_KIND_ARRAY:
-        return [jv_to_pyobj(jv_array_get(jv_copy(jval), i)) for i in range(jv_array_length(jv_copy(jval)))]
+        alist = []
+        for i in range(jv_array_length(jv_copy(jval))):
+            value = jv_array_get(jv_copy(jval), i)
+            alist.append(jv_to_pyobj(value))
+            jv_free(value)
+        return alist
     elif kind == JV_KIND_OBJECT:
         adict = OrderedDict()
         it = jv_object_iter(jval)
         while jv_object_iter_valid(jval, it):
-            k = jv_to_pyobj(jv_object_iter_key(jval, it))
-            v = jv_to_pyobj(jv_object_iter_value(jval, it))
+            key = jv_object_iter_key(jval, it)
+            k = jv_to_pyobj(key)
+            jv_free(key)
+            value = jv_object_iter_value(jval, it)
+            v = jv_to_pyobj(value)
+            jv_free(value)
             adict[k] = v
             it = jv_object_iter_next(jval, it)
         return adict
