@@ -142,9 +142,19 @@ Released under the MIT license. See LICENSE for details.
 Development
 -----------
 
+## Pipenv
+
+This project uses [Pipenv](https://docs.pipenv.org/en/latest/) to manage dependencies.
+
+Please install development tools with folloing command:
+
+```python
+pipenv install --dev -e
+```
+
 ## We DO commit `_pyjq.c`
 
-When you edit `_pyjq.pyx`, you need to run `cython _pyjq.pyx` before to run `python setup.py develop`.
+When you edit `_pyjq.pyx`, you need to run `pipenv run cython _pyjq.pyx` before to run `pipenv run python setup.py develop`.
 It is because `setup.py` in this project does not compile .pyx to .c.
 
 Of course, we can use `Cython.Build.cythonize` in setup.py to automatically compile .pyx to .c .
