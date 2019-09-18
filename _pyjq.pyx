@@ -5,8 +5,6 @@ Python binding for jq
 
 import os
 
-from collections import OrderedDict
-import six
 
 class ScriptRuntimeError(Exception):
     """
@@ -117,7 +115,7 @@ cdef object jv_to_pyobj(jv jval):
             jv_free(value)
         return alist
     elif kind == JV_KIND_OBJECT:
-        adict = OrderedDict()
+        adict = {}
         it = jv_object_iter(jval)
         while jv_object_iter_valid(jval, it):
             key = jv_object_iter_key(jval, it)
@@ -132,10 +130,10 @@ cdef object jv_to_pyobj(jv jval):
 
 
 cdef jv pyobj_to_jv(object pyobj):
-    if isinstance(pyobj, six.text_type):
+    if isinstance(pyobj, str):
         pyobj = pyobj.encode('utf-8')
         return jv_string_sized(pyobj, len(pyobj))
-    elif six.PY2 and isinstance(pyobj, six.binary_type):
+    elif isinstance(pyobj, bytes):
         return jv_string_sized(pyobj, len(pyobj))
     elif isinstance(pyobj, bool):
         return jv_bool(pyobj)
@@ -149,10 +147,7 @@ cdef jv pyobj_to_jv(object pyobj):
     elif isinstance(pyobj, dict):
         jval = jv_object()
         for key, value in pyobj.items():
-            if isinstance(key, six.string_types):
-                if isinstance(key, six.binary_type):
-                    key = six.text_type(key)
-            else:
+            if not isinstance(key, str):
                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
         return jval
