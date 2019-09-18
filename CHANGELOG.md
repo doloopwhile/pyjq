@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+### 2.3.0
+
+- Supported WindowsPE(msys)
+
+### 2.2.0
+
+- Added `library_paths=` option.
+
 ### 2.1.0
 
 - API's translate JS object not to `dict` but to `collections.OrderedDict`.
