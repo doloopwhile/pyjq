@@ -1,0 +1,18 @@
+Changelog
+---------
+
+### 2.1.0
+
+- API's translate JS object not to `dict` but to `collections.OrderedDict`.
+
+### 2.0.0
+
+- Semantic versioning.
+- Bundle source codes of jq and oniguruma.
+- Supported Python 3.5.
+- Dropped support for Python 3.2.
+- Aeded `all` method.
+
+### 1.0
+
+- First release.
