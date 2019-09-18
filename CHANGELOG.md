@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+### 2.4.0
+
+- Dropped support for Python 2.7, 3.4, 3.5 (Supports only 3.6+).
+
 ### 2.3.0
 
 - Supported WindowsPE(msys)
