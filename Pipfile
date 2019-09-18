@@ -4,11 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyjq = {editable = true, path = "."}
+pyjq = {editable = true,path = "."}
 
 [dev-packages]
 cython = "*"
 mock = "*"
+twine = "*"
 
 [requires]
 python_version = "3.7"
