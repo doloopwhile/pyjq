@@ -7,8 +7,8 @@ name = "pypi"
 pyjq = {editable = true, path = "."}
 
 [dev-packages]
-cython = "==0.19"
+cython = "*"
 mock = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

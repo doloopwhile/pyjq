@@ -12,7 +12,6 @@ from setuptools import setup
 from setuptools.extension import Extension
 from setuptools.command.build_ext import _build_ext
 
-long_description = io.open('README.rst', encoding='utf-8').read()
 
 dependencies_dir_path = join(abspath(dirname(__file__)), "dependencies")
 
@@ -91,31 +90,8 @@ pyjq = Extension(
 )
 
 setup(
-    py_modules=['pyjq'],
-    install_requires=['six'],
     test_suite='test_pyjq',
     ext_modules=[pyjq],
     cmdclass={"build_ext": build_ext},
-    name='pyjq',
-    version='2.3.0',
-    description='Binding for jq JSON processor.',
-    long_description=long_description,
-    author='OMOTO Kenji',
-    url='http://github.com/doloopwhile/pyjq',
-    license='MIT License',
     package_data={'': [onig_tarball_path, jq_tarball_path]},
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Natural Language :: English',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: JavaScript',
-    ],
 )
