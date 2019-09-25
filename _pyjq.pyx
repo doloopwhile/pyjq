@@ -129,7 +129,7 @@ cdef object jv_to_pyobj(jv jval):
         return adict
 
 
-cdef jv pyobj_to_jv(object pyobj):
+cdef jv pyobj_to_jv(object pyobj) except *:
     if isinstance(pyobj, str):
         pyobj = pyobj.encode('utf-8')
         return jv_string_sized(pyobj, len(pyobj))

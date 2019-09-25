@@ -1,16 +1,17 @@
 # encoding: utf8
 from __future__ import unicode_literals
-import unittest
-import re
 
-from unittest.mock import patch
-import tempfile
-import shutil
-import os.path
 import io
+import os.path
+import re
+import shutil
+import tempfile
+import unittest
+from datetime import datetime
+from unittest.mock import patch
 
-import pyjq
 import _pyjq
+import pyjq
 
 
 class TestCaseBackwardCompatMixin:
@@ -27,6 +28,11 @@ class TestJq(unittest.TestCase, TestCaseBackwardCompatMixin):
         expected_message = re.escape(r"error: syntax error")
         with self.assertRaisesRegexp(ValueError, expected_message):
             pyjq.compile('**')
+
+    def test_non_json_data(self):
+        expected_message = re.escape("<class 'datetime.datetime'> could not be converted to json")
+        with self.assertRaisesRegexp(TypeError, expected_message):
+            pyjq.all('.', {'date': datetime.now()})
 
     def test_conversion_between_python_object_and_jv(self):
         objects = [
