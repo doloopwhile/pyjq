@@ -113,7 +113,7 @@ def test_library_path(tmp_path_factory):
     values = pyjq.all(
         'include "greeting"; include "increment"; .[] | [. | increment, hello, world]',
         [1, 2, 3],
-        library_paths=[str(library_path), str(library_path2)],
+        library_paths=[str(library_path), library_path2], # It accepts both of str and pathlib.Path
     )
     assert [[2, "HELLO", "WORLD"], [3, "HELLO", "WORLD"], [4, "HELLO", "WORLD"]] == values
 

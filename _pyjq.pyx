@@ -161,8 +161,6 @@ cdef void Script_error_cb(void* x, jv err):
     Script._error_cb(<object>x, err)
 
 
-
-
 cdef class Script:
     'Compiled jq script object'
     cdef object _errors
@@ -183,7 +181,7 @@ cdef class Script:
         jq_set_attr(
             self._jq,
             pyobj_to_jv("JQ_LIBRARY_PATH"),
-            pyobj_to_jv(library_paths)
+            pyobj_to_jv([str(path) for path in library_paths])
         )
 
         if not jq_compile_args(self._jq, script, args):
