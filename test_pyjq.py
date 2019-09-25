@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import unittest
 import re
 
-from mock import patch
+from unittest.mock import patch
 import tempfile
 import shutil
 import os.path

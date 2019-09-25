@@ -7,40 +7,19 @@ workflows:
       - test36
       - test37
 
-_test-body:
-  - &_dep
-    run:
-      name: install dependencies
-      command: |
-        . venv/bin/activate
-        python setup.py install
-        pip install -r devel-requirements.txt
-  - &_test
-    run:
-      name: run tests
-      command: |
-        . venv/bin/activate
-        python test_pyjq.py
-
 jobs:
   test36:
     docker:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - run:
-          name: create venv
-          command: python -m venv venv
-      - *_dep
-      - *_test
+      - run: pip install --user tox
+      - run: tox -e py36
 
   test37:
     docker:
       - image: circleci/python:3.7
     steps:
       - checkout
-      - run:
-          name: create venv
-          command: python -m venv venv
-      - *_dep
-      - *_test
+      - run: pip install --user tox
+      - run: tox -e py37
