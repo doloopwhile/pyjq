@@ -5,7 +5,7 @@ pyjq: Binding for jq JSON Processor
 
 pyjq is a Python bindings for jq (<http://stedolan.github.io/jq/>).
 
-> jq is like sed for JSON data – you can use it to slice and filter and
+> jq is like sed for JSON data - you can use it to slice and filter and
 > map and transform structured data with the same ease that sed, awk,
 > grep and friends let you play with text.
 >
@@ -32,7 +32,8 @@ Example
 ... )
 >>> import pyjq
 >>> pyjq.first('.parameters[] | {"param_name": .name, "param_type":.type}', data)
-{'param_type': None, 'param_name': 'PKG_TAG_NAME'}
+{'param_name': 'PKG_TAG_NAME', 'param_type': None}
+
 ```
 
 Install
@@ -62,15 +63,18 @@ Only four APIs are provided:
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.all('{user, title: .titles[]}', value)
 [{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
+
 ```
 
 `all` takes an optional argument `vars`.
 `vars` is a dictonary of predefined variables for `script`.
 The values in `vars` are avaiable in the `script` as a `$key`.
 That is, `vars` works like `--arg` option and `--argjson` option of jq command.
+
 ```python
 >>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={"title": "More JQ"})
 [{'user': 'stedolan', 'title': 'More JQ'}]
+
 ```
 
 `all` takes an optional argument `url`.
@@ -79,42 +83,53 @@ If `url` is given, the subject of transformation is got from the `url`.
 ```python
 >> pyjq.all(".[] | .login", url="https://api.github.com/repos/stedolan/jq/contributors") # get all contributors of jq
 ['nicowilliams', 'stedolan', 'dtolnay', ... ]
+
 ```
 
 Additionally, `all` takes an optional argument `opener`.
 The default `opener` will simply download contents by `urllib.request.urlopen` and decode by `json.decode`.
 However, you can customize this behavior using custom `opener`.
 
-`first` is almost some to `all` but it `first` returns the first result of transformation.
+`first` and `one` are similar to to `all`.
+
+`first` return the first result of transformation.
+When there are no results, `first` returns `None` or given `default`.
 
 ```python
->>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
->>> pyjq.all('{user, title: .titles[]}', value)
-[{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
-```
-
-`first` returns `default` when there are no results.
-
-```python
->>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
->>> pyjq.first('.titles[] | select(test("e"))', value) # The first title which is contains "e"
-'JQ Primer'
-```
-
-`first` returns the first result of transformation. It returns `default` when there are no results.
-
-```python
->>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
->>> pyjq.first('.titles[] | select(test("T"))', value, "Third JS") # The first title which is contains "T"
+>>> data = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> pyjq.first('{user, title: .titles[]}', data)
+{'user': 'stedolan', 'title': 'JQ Primer'}
+>>> pyjq.first('.titles[] | select(test("T"))', data) # returns None
+>>> pyjq.first('.titles[] | select(test("T"))', data, default="Third JS")
 'Third JS'
+
 ```
 
-`one` do also returns the first result of transformation but raise Exception if there are no results.
+`one` returns the only result of transformation.
+It raises excaption when there are no results or when there are two or more results.
 
 ```python
->>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
->>> pyjq.one('.titles[] | select(test("T"))', value)
+>>> data = {"user":"stedolan","titles": ["JQ Primer", "More JQ"]}
+>>> pyjq.one('.titles[] | select(test("P"))', data)
+'JQ Primer'
+>>> pyjq.one('.titles[] | select(test("T"))', data)
+Traceback (most recent call last):
 IndexError: Result of jq is empty
+>>> pyjq.one('.titles[] | select(test("J"))', data)
+Traceback (most recent call last):
+IndexError: Result of jq have multiple elements
+
+```
+
+`compile` is similar to `re.compile`. It accepts jq script and returns a object with methods.
+
+```python
+>>> data = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
+>>> import pyjq
+>>> pat = pyjq.compile('{user, title: .titles[]}')
+>>> pat.all(data)
+[{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
+
 ```
 
 Limitation
@@ -151,6 +166,16 @@ Please install development tools with folloing command:
 ```python
 pipenv install --dev -e
 ```
+
+## Test
+
+We can run test with `tox`.
+
+```shell
+pipenv run pytest --doctest-modules --ignore-glob='dependencies/**/*.py'
+```
+
+On pull request, Tox is executed in Circle CI.
 
 ## We DO commit `_pyjq.c`
 
