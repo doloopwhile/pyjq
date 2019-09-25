@@ -99,8 +99,8 @@ def test_url_argument():
 
 
 def test_library_path(tmp_path_factory):
-    library_path = tmp_path_factory.mktemp('a')
-    library_path2 = tmp_path_factory.mktemp('b')
+    library_path = tmp_path_factory.mktemp("a")
+    library_path2 = tmp_path_factory.mktemp("b")
 
     library_file = library_path / "greeting.jq"
     library_file2 = library_path2 / "increment.jq"
@@ -113,7 +113,7 @@ def test_library_path(tmp_path_factory):
     values = pyjq.all(
         'include "greeting"; include "increment"; .[] | [. | increment, hello, world]',
         [1, 2, 3],
-        library_paths=[str(library_path), library_path2], # It accepts both of str and pathlib.Path
+        library_paths=[str(library_path), library_path2],  # It accepts both of str and pathlib.Path
     )
     assert [[2, "HELLO", "WORLD"], [3, "HELLO", "WORLD"], [4, "HELLO", "WORLD"]] == values
 
