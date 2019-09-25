@@ -91,7 +91,7 @@ cdef extern from "jq.h":
     void jq_set_error_cb(jq_state *, jq_err_cb, void *)
 
 
-cdef object jv_to_pyobj(jv jval):
+cdef jv_to_pyobj(jv jval, int max_safe_integer):
     kind = jv_get_kind(jval)
 
     if kind == JV_KIND_NULL:
@@ -102,7 +102,7 @@ cdef object jv_to_pyobj(jv jval):
         return True
     elif kind == JV_KIND_NUMBER:
         v = jv_number_value(jval)
-        if jv_is_integer(jval):
+        if 0 <= max_safe_integer and -max_safe_integer <= v <= max_safe_integer:
             return int(v)
         return v
     elif kind == JV_KIND_STRING:
@@ -111,7 +111,7 @@ cdef object jv_to_pyobj(jv jval):
         alist = []
         for i in range(jv_array_length(jv_copy(jval))):
             value = jv_array_get(jv_copy(jval), i)
-            alist.append(jv_to_pyobj(value))
+            alist.append(jv_to_pyobj(value, max_safe_integer))
             jv_free(value)
         return alist
     elif kind == JV_KIND_OBJECT:
@@ -119,10 +119,10 @@ cdef object jv_to_pyobj(jv jval):
         it = jv_object_iter(jval)
         while jv_object_iter_valid(jval, it):
             key = jv_object_iter_key(jval, it)
-            k = jv_to_pyobj(key)
+            k = jv_to_pyobj(key, max_safe_integer)
             jv_free(key)
             value = jv_object_iter_value(jval, it)
-            v = jv_to_pyobj(value)
+            v = jv_to_pyobj(value, max_safe_integer)
             jv_free(value)
             adict[k] = v
             it = jv_object_iter_next(jval, it)
@@ -165,18 +165,22 @@ cdef class Script:
     'Compiled jq script object'
     cdef object _errors
     cdef jq_state* _jq
+    cdef int _max_safe_integer
 
-    def __init__(self, const char* script, vars={}, library_paths=[]):
+    def __init__(self, const char* script, dict vars, list library_paths, int max_safe_integer):
         self._errors = []
         self._jq = jq_init()
+        self._max_safe_integer = max_safe_integer
         if not self._jq:
             raise RuntimeError('Failed to initialize jq')
         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
 
-        args = pyobj_to_jv([
-            dict(name=k, value=v)
-            for k, v in vars.items()
-        ])
+        args = pyobj_to_jv(
+            [
+                dict(name=k, value=v)
+                for k, v in vars.items()
+            ],
+        )
 
         jq_set_attr(
             self._jq,
@@ -207,10 +211,10 @@ cdef class Script:
                     if not jv_invalid_has_msg(jv_copy(result)):
                         break
                     m = jv_invalid_get_msg(jv_copy(result))
-                    e = str(jv_to_pyobj(m))
+                    e = str(jv_string_value(m).decode('utf-8'))
                     raise ScriptRuntimeError(e)
                 else:
-                    output.append(jv_to_pyobj(result))
+                    output.append(jv_to_pyobj(result, max_safe_integer=self._max_safe_integer))
             finally:
                 jv_free(result)
         return output

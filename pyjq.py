@@ -5,14 +5,18 @@ import urllib
 import _pyjq
 
 
-def compile(script, vars={}, library_paths=[]):
+# MAX_SAFE_INTEGER = 2 ** 53 - 1
+MAX_SAFE_INTEGER = 2 ** 31 - 1
+
+
+def compile(script, vars={}, library_paths=[], *, max_safe_integer=MAX_SAFE_INTEGER):
     """
     Compile a jq script, retuning a script object.
 
     library_paths is a list of strings that defines the module search path.
     """
 
-    return _pyjq.Script(script.encode("utf-8"), vars=vars, library_paths=library_paths)
+    return _pyjq.Script(script.encode("utf-8"), vars=vars, library_paths=library_paths, max_safe_integer=max_safe_integer)
 
 
 def default_opener(url):
@@ -38,34 +42,34 @@ def _get_value(value, url, opener):
     return value
 
 
-def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], *, max_safe_integer=MAX_SAFE_INTEGER):
     """
     Transform value by script, returning all results as list.
     """
-    return compile(script, vars, library_paths).all(_get_value(value, url, opener))
+    return compile(script, vars, library_paths, max_safe_integer=max_safe_integer).all(_get_value(value, url, opener))
 
 
-def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], *, max_safe_integer=MAX_SAFE_INTEGER):
     """
     Transform value by script, returning all results as list.
     """
-    return all(script, value, vars, url, opener, library_paths)
+    return all(script, value, vars, url, opener, library_paths, max_safe_integer)
 
 
 apply.__doc__ = all.__doc__
 
 
-def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=[], *, max_safe_integer=MAX_SAFE_INTEGER):
     """
     Transform object by jq script, returning the first result.
     Return default if result is empty.
     """
-    return compile(script, vars, library_paths).first(_get_value(value, url, opener), default)
+    return compile(script, vars, library_paths, max_safe_integer=max_safe_integer).first(_get_value(value, url, opener), default)
 
 
-def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], *, max_safe_integer=MAX_SAFE_INTEGER):
     """
     Transform object by jq script, returning the first result.
     Raise ValueError unless results does not include exactly one element.
     """
-    return compile(script, vars, library_paths).one(_get_value(value, url, opener))
+    return compile(script, vars, library_paths, max_safe_integer=max_safe_integer).one(_get_value(value, url, opener))

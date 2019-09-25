@@ -28,8 +28,8 @@ jq_source_path = join(dependencies_dir_path, "jq-1.6")
 
 class build_ext(_build_ext):
     def run(self):
-        self._build_oniguruma()
-        self._build_libjq()
+        # self._build_oniguruma()
+        # self._build_libjq()
         _build_ext.run(self)
 
     def _build_oniguruma(self):
