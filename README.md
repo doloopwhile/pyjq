@@ -132,6 +132,43 @@ IndexError: Result of jq have multiple elements
 
 ```
 
+Conversion from `Number` to `int` / `float`
+-------------------------------------------
+
+`pyjq` automatically converts "small enough" integers to `int`. It is "natural" behavior, probably.
+
+```python
+>>> import pyjq
+>>> data = {'small int': 42, 'large int': 9007199254740992, 'float': 42.5}
+>>> pyjq.all('.', data)
+[42, 9007199254740992.0, 42.5]
+
+```
+
+The boundary of "small" and "large" is 9007199254740991 (== 2 ** 53 - 1).
+
+### Background
+
+As you know, Python have two number types  - `int` for integer and `float` for floating point number.
+
+By contrast, `jq` have the only `Number` type. `Number` is implemented with `double` of C.
+It looks that `jq` can treat "integers" because the `jq` command prints small integer without decimal point.
+However, Any integer values (and floating point number values) are stored in `Number` actually.
+
+```shell
+$ jq -c -n '.x = 2147483648'
+{"x":2147483648}
+
+```
+
+So, We must determine a strategy to convert `Number` of `jq` to `int` and `float` of Python.
+
+A simple strategy is to convert `Number` to `float` always.
+This strategy have a downside that 
+
+### Options
+
+
 Limitation
 ----------
 

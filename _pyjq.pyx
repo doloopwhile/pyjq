@@ -93,9 +93,10 @@ cdef extern from "jq.h":
 
 cdef extern from "stdint.h":
     ctypedef uint64_t
+    ctypedef int64_t
 
 
-cdef jv_to_pyobj(jv jval, uint64_t max_safe_integer):
+cdef object jv_to_pyobj(jv jval, uint64_t max_safe_integer):
     kind = jv_get_kind(jval)
 
     if kind == JV_KIND_NULL:
@@ -106,7 +107,7 @@ cdef jv_to_pyobj(jv jval, uint64_t max_safe_integer):
         return True
     elif kind == JV_KIND_NUMBER:
         v = jv_number_value(jval)
-        if v == <int>v and 0 <= max_safe_integer and -max_safe_integer <= v <= max_safe_integer:
+        if 0 <= max_safe_integer and -max_safe_integer <= v <= max_safe_integer and v == int(v):
             return int(v)
         return v
     elif kind == JV_KIND_STRING:

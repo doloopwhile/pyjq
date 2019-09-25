@@ -5,9 +5,8 @@ import urllib
 import _pyjq
 
 
-# Maximum integer which is considered as "safe".
-# 
 MAX_SAFE_INTEGER = 2 ** 53 - 1
+NOT_CONVERT_TO_INTEGER = -1
 
 
 def compile(script, vars={}, library_paths=[], *, max_safe_integer=None):
@@ -16,8 +15,8 @@ def compile(script, vars={}, library_paths=[], *, max_safe_integer=None):
 
     library_paths is a list of strings that defines the module search path.
     """
-
-    max_safe_integer = MAX_SAFE_INTEGER if max_safe_integer is None else max_safe_integer
+    if max_safe_integer is None:
+        max_safe_integer = MAX_SAFE_INTEGER
     return _pyjq.Script(script.encode("utf-8"), vars=vars, library_paths=library_paths, max_safe_integer=max_safe_integer)
 
 
