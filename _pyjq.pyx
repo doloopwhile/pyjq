@@ -52,7 +52,7 @@ cdef extern from "jv.h":
     jv jv_array_append(jv, jv)
 
     jv jv_string_sized(const char*, int)
-    jv jv_dump_string(jv, int) 
+    jv jv_dump_string(jv, int)
 
     jv jv_object()
     jv jv_object_get(jv object, jv key)
@@ -91,7 +91,11 @@ cdef extern from "jq.h":
     void jq_set_error_cb(jq_state *, jq_err_cb, void *)
 
 
-cdef jv_to_pyobj(jv jval, int max_safe_integer):
+cdef extern from "stdint.h":
+    ctypedef uint64_t
+
+
+cdef jv_to_pyobj(jv jval, uint64_t max_safe_integer):
     kind = jv_get_kind(jval)
 
     if kind == JV_KIND_NULL:
@@ -102,7 +106,7 @@ cdef jv_to_pyobj(jv jval, int max_safe_integer):
         return True
     elif kind == JV_KIND_NUMBER:
         v = jv_number_value(jval)
-        if 0 <= max_safe_integer and -max_safe_integer <= v <= max_safe_integer:
+        if v == <int>v and 0 <= max_safe_integer and -max_safe_integer <= v <= max_safe_integer:
             return int(v)
         return v
     elif kind == JV_KIND_STRING:
@@ -165,9 +169,9 @@ cdef class Script:
     'Compiled jq script object'
     cdef object _errors
     cdef jq_state* _jq
-    cdef int _max_safe_integer
+    cdef uint64_t _max_safe_integer
 
-    def __init__(self, const char* script, dict vars, list library_paths, int max_safe_integer):
+    def __init__(self, const char* script, dict vars, list library_paths, uint64_t max_safe_integer):
         self._errors = []
         self._jq = jq_init()
         self._max_safe_integer = max_safe_integer

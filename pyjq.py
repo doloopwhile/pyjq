@@ -5,8 +5,8 @@ import urllib
 import _pyjq
 
 
-# MAX_SAFE_INTEGER = 2 ** 53 - 1
-MAX_SAFE_INTEGER = 2 ** 31 - 1
+MAX_SAFE_INTEGER = 2 ** 53 - 1
+# MAX_SAFE_INTEGER = 2 ** 31 - 1
 
 
 def compile(script, vars={}, library_paths=[], *, max_safe_integer=MAX_SAFE_INTEGER):
