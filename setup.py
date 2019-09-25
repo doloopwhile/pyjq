@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 import io
+import lib2to3.main
 import os
-import subprocess
-import tarfile
-import shutil
-from os.path import join, dirname, abspath
 import platform
-
+import shutil
+import subprocess
+import sys
 import sysconfig
-from setuptools import setup
-from setuptools.extension import Extension
-from setuptools.command.build_ext import _build_ext
+import tarfile
+from os.path import abspath, dirname, join
+from pathlib import Path
 
+from setuptools import setup
+from setuptools.command.build_ext import _build_ext
+from setuptools.extension import Extension
 
 dependencies_dir_path = join(abspath(dirname(__file__)), "dependencies")
 
@@ -35,6 +37,9 @@ class build_ext(_build_ext):
         self._safe_rmtree(onig_source_path)
 
         self._extract_tarball(onig_tarball_path, dependencies_dir_path)
+        for f in Path(onig_source_path).glob('src/*.py'):
+            lib2to3.main.main("lib2to3.fixes", args=['-w', '--no-diffs', '-f', 'print', str(f)])
+
         self._build_lib(
             lib_dir=onig_source_path,
             commands=[
@@ -90,7 +95,6 @@ pyjq = Extension(
 )
 
 setup(
-    test_suite='test_pyjq',
     ext_modules=[pyjq],
     cmdclass={"build_ext": build_ext},
     package_data={'': [onig_tarball_path, jq_tarball_path]},

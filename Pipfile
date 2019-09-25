@@ -8,8 +8,9 @@ pyjq = {editable = true,path = "."}
 
 [dev-packages]
 cython = "*"
-mock = "*"
 twine = "*"
+pytest = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.7"
