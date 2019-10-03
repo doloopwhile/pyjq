@@ -61,7 +61,7 @@ class build_ext(_build_ext):
                 ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode",
                  "--enable-all-static", "--disable-shared",
                  "--with-oniguruma=" + onig_install_path, "--prefix", jq_install_path],
-                ["make", "install-libLTLIBRARIES", "install-includeHEADERS"],
+                ["make", "install"],
             ]
         )
 
