@@ -12,5 +12,6 @@
 /*.c
 
 # dependencies
-/dependencies/
 pip-wheel-metadata/
+
+dependencies/
