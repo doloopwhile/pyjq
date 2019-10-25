@@ -69,7 +69,7 @@ Only four APIs are provided:
 
 `all` takes an optional argument `vars`.
 `vars` is a dictonary of predefined variables for `script`.
-The values in `vars` are avaiable in the `script` as a `$key`.
+The values in `vars` are available in the `script` as a `$key`.
 That is, `vars` works like `--arg` option and `--argjson` option of jq command.
 
 ```python
@@ -139,7 +139,7 @@ Q&A
 
 ### How can I process a json string (f.e. gotten from an API) with pyjq?
 
-You should apply `json.loads` from the standard library to the string, before you pass it to pyjq.
+You should call `json.loads` from the standard library on the string, before you pass it to pyjq.
 
 Author
 ------
