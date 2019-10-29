@@ -12,7 +12,7 @@ pyjq is a Python bindings for jq (<http://stedolan.github.io/jq/>).
 > <http://stedolan.github.io/jq/>
 
 You can seamlessly call jq script (like regular expression) and process
-plain python data structure.
+a plain python data structure.
 
 For your information, <https://pypi.python.org/pypi/jq> is a also jq
 bindings but different and incompatible with pyjq.
@@ -43,7 +43,9 @@ It requires build tools such as make, automake, libtool, etc...
 
 You can install from PyPI by usual way.
 
-    pip install pyjq
+```shell
+pip install pyjq
+```
 
 API
 ---
@@ -63,37 +65,34 @@ Only four APIs are provided:
 >>> value = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
 >>> pyjq.all('{user, title: .titles[]}', value)
 [{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
-
 ```
 
 `all` takes an optional argument `vars`.
 `vars` is a dictonary of predefined variables for `script`.
-The values in `vars` are avaiable in the `script` as a `$key`.
+The values in `vars` are available in the `script` as a `$key`.
 That is, `vars` works like `--arg` option and `--argjson` option of jq command.
 
 ```python
 >>> pyjq.all('{user, title: .titles[]} | select(.title == $title)', value, vars={"title": "More JQ"})
 [{'user': 'stedolan', 'title': 'More JQ'}]
-
 ```
 
 `all` takes an optional argument `url`.
-If `url` is given, the subject of transformation is got from the `url`.
+If `url` is given, the subject of transformation is retrieved from the `url`.
 
 ```python
 >> pyjq.all(".[] | .login", url="https://api.github.com/repos/stedolan/jq/contributors") # get all contributors of jq
 ['nicowilliams', 'stedolan', 'dtolnay', ... ]
-
 ```
 
 Additionally, `all` takes an optional argument `opener`.
-The default `opener` will simply download contents by `urllib.request.urlopen` and decode by `json.decode`.
-However, you can customize this behavior using custom `opener`.
+The default `opener` will download contents using `urllib.request.urlopen` and decode using `json.decode`.
+However, you can customize this behavior using a custom `opener`.
 
 `first` and `one` are similar to to `all`.
 
-`first` return the first result of transformation.
-When there are no results, `first` returns `None` or given `default`.
+`first` returns the first result of transformation.
+When there are no results, `first` returns `None` or the given `default`.
 
 ```python
 >>> data = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
@@ -102,11 +101,10 @@ When there are no results, `first` returns `None` or given `default`.
 >>> pyjq.first('.titles[] | select(test("T"))', data) # returns None
 >>> pyjq.first('.titles[] | select(test("T"))', data, default="Third JS")
 'Third JS'
-
 ```
 
-`one` returns the only result of transformation.
-It raises excaption when there are no results or when there are two or more results.
+`one` returns the only result of a transformation.
+It raises an exception when there are no results or when there are two or more results.
 
 ```python
 >>> data = {"user":"stedolan","titles": ["JQ Primer", "More JQ"]}
@@ -118,10 +116,9 @@ IndexError: Result of jq is empty
 >>> pyjq.one('.titles[] | select(test("J"))', data)
 Traceback (most recent call last):
 IndexError: Result of jq have multiple elements
-
 ```
 
-`compile` is similar to `re.compile`. It accepts jq script and returns a object with methods.
+`compile` is similar to `re.compile`. It accepts jq script and returns an object with methods.
 
 ```python
 >>> data = {"user":"stedolan","titles":["JQ Primer", "More JQ"]}
@@ -129,11 +126,10 @@ IndexError: Result of jq have multiple elements
 >>> pat = pyjq.compile('{user, title: .titles[]}')
 >>> pat.all(data)
 [{'user': 'stedolan', 'title': 'JQ Primer'}, {'user': 'stedolan', 'title': 'More JQ'}]
-
 ```
 
-Limitation
-----------
+Limitations
+-----------
 
 jq is a JSON Processor. Therefore pyjq is able to process only
 "JSON compatible" data (object made only from str, int, float, list, dict).
@@ -141,9 +137,9 @@ jq is a JSON Processor. Therefore pyjq is able to process only
 Q&A
 ---
 
-### How can I process json string got from API by pyjq?
+### How can I process a json string (f.e. gotten from an API) with pyjq?
 
-You should apply `json.loads` in the standard library before pass to pyjq.
+You should call `json.loads` from the standard library on the string, before you pass it to pyjq.
 
 Author
 ------
@@ -161,15 +157,15 @@ Development
 
 This project uses [Pipenv](https://docs.pipenv.org/en/latest/) to manage dependencies.
 
-Please install development tools with folloing command:
+Please install development tools with the following command:
 
-```python
+```shell
 pipenv install --dev -e
 ```
 
 ## Test
 
-We can run test with `tox`.
+We can run the tests with `tox`.
 
 ```shell
 pipenv run pytest --doctest-modules --ignore-glob='dependencies/**/*.py'
@@ -179,11 +175,11 @@ On pull request, Tox is executed in Circle CI.
 
 ## We DO commit `_pyjq.c`
 
-When you edit `_pyjq.pyx`, you need to run `pipenv run cython _pyjq.pyx` before to run `pipenv run python setup.py develop`.
-It is because `setup.py` in this project does not compile .pyx to .c.
+When you edit `_pyjq.pyx`, you need to run `pipenv run cython _pyjq.pyx` before you run `pipenv run python setup.py develop`.
+You need to do this because `setup.py` in this project does not compile `.pyx` to `.c` .
 
-Of course, we can use `Cython.Build.cythonize` in setup.py to automatically compile .pyx to .c .
-But, it cause bootstrap problem in ``pip install``.
+Of course, we can use `Cython.Build.cythonize` in `setup.py` to automatically compile `.pyx` to `.c` .
+But, it causes a bootstrap problem in ``pip install``.
 
 So, we DO commit both of `_pyjq.pyx` and `_pyjq.c`.
 
@@ -191,7 +187,7 @@ License
 -------
 MIT License. See [LICENSE](./LICENSE).
 
-This package includes [jq](https://github.com/stedolan/jq) and [oniguruma](https://github.com/kkos/oniguruma). Their license files are included in archive files.
+This package includes [jq](https://github.com/stedolan/jq) and [oniguruma](https://github.com/kkos/oniguruma). Their license files are included in their respective archive files.
 
 - jq: `dependencies/jq-1.5.tar.gz`
 - oniguruma: `dependencies/onig-6.9.0.tar.gz`
