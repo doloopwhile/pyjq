@@ -3509,7 +3509,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_6first(struct __pyx_obj_5_pyjq_Script *
 
 /* Python wrapper */
 static PyObject *__pyx_pw_5_pyjq_6Script_9one(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static char __pyx_doc_5_pyjq_6Script_8one[] = "\n        Transform object by jq script, returning the first result.\n        Raise ValueError unless results does not include exactly one element.\n        ";
+static char __pyx_doc_5_pyjq_6Script_8one[] = "\n        Transform object by jq script, returning the first result.\n        Raise IndexError unless results does not include exactly one element.\n        ";
 static PyObject *__pyx_pw_5_pyjq_6Script_9one(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
@@ -3534,7 +3534,7 @@ static PyObject *__pyx_pf_5_pyjq_6Script_8one(struct __pyx_obj_5_pyjq_Script *__
   __Pyx_RefNannySetupContext("one", 0);
 
   /* "_pyjq.pyx":235
- *         Raise ValueError unless results does not include exactly one element.
+ *         Raise IndexError unless results does not include exactly one element.
  *         """
  *         ret = self.apply(value)             # <<<<<<<<<<<<<<
  *         if not ret:
