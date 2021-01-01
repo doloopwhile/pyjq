@@ -5,6 +5,9 @@ import urllib
 import _pyjq
 
 
+ScriptRuntimeError = _pyjq.ScriptRuntimeError
+
+
 def compile(script, vars={}, library_paths=[]):
     """
     Compile a jq script, retuning a script object.

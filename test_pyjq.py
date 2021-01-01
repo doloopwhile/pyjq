@@ -118,5 +118,5 @@ def test_library_path(tmp_path_factory):
     assert [[2, "HELLO", "WORLD"], [3, "HELLO", "WORLD"], [4, "HELLO", "WORLD"]] == values
 
 
-def test_argument_errors():
-    pyjq.compile("$value", {"value": 123})
+def test_script_runtime_error_exported():
+    pyjq.ScriptRuntimeError # exported
