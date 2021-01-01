@@ -39,7 +39,8 @@ Example
 Install
 -------
 
-It requires build tools such as make, automake, libtool, etc...
+You will need flex, bison (3.0 or newer), libtool, make, automake and autoconf to build jq.
+Install them by Homebrew, APT or other way.
 
 You can install from PyPI by usual way.
 
@@ -160,7 +161,7 @@ This project uses [Pipenv](https://docs.pipenv.org/en/latest/) to manage depende
 Please install development tools with the following command:
 
 ```shell
-pipenv install --dev -e
+pipenv install --dev
 ```
 
 ## Test

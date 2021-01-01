@@ -4,18 +4,11 @@ workflows:
   version: 2
   test:
     jobs:
-      - test36
       - test37
+      - test38
+      - test39
 
 jobs:
-  test36:
-    docker:
-      - image: circleci/python:3.6
-    steps:
-      - checkout
-      - run: pip install --user tox
-      - run: tox -e py36
-
   test37:
     docker:
       - image: circleci/python:3.7
@@ -23,3 +16,19 @@ jobs:
       - checkout
       - run: pip install --user tox
       - run: tox -e py37
+
+  test38:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run: pip install --user tox
+      - run: tox -e py38
+
+  test39:
+    docker:
+      - image: circleci/python:3.9
+    steps:
+      - checkout
+      - run: pip install --user tox
+      - run: tox -e py39
