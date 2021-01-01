@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+### 2.5.0
+
+- Supports only 3.7+.
+- Added pyjq.ScriptRuntimeError.
+
 ### 2.4.0
 
 - Dropped support for Python 2.7, 3.4, 3.5 (Supports only 3.6+).
