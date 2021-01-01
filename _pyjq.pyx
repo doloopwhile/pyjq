@@ -230,7 +230,7 @@ cdef class Script:
     def one(self, value):
         """
         Transform object by jq script, returning the first result.
-        Raise ValueError unless results does not include exactly one element.
+        Raise IndexError unless results does not include exactly one element.
         """
         ret = self.apply(value)
         if not ret:
