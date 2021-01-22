@@ -68,7 +68,7 @@ class build_ext(_build_ext):
     def _build_lib(self, lib_dir, commands):
         macosx_deployment_target = sysconfig.get_config_var("MACOSX_DEPLOYMENT_TARGET")
         if macosx_deployment_target:
-            os.environ['MACOSX_DEPLOYMENT_TARGET'] = macosx_deployment_target
+            os.environ['MACOSX_DEPLOYMENT_TARGET'] = str(macosx_deployment_target)
 
         for command in commands:
             subprocess.check_call(command, cwd=lib_dir)
