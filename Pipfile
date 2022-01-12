@@ -1,8 +1,8 @@
 [packages]
-pyjq = {editable = true,path = "."}
+pyjq = {editable = true, path = "."}
 
 [dev-packages]
-cython = "*"
+cython = ">=0.29.26"
 twine = "*"
 pytest = "*"
 mypy = "*"
