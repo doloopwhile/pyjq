@@ -1,12 +1,5 @@
 # encoding: utf8
-from __future__ import unicode_literals
-
-import io
-import os.path
 import re
-import shutil
-import tempfile
-import unittest
 from datetime import datetime
 from unittest.mock import patch
 
@@ -119,4 +112,4 @@ def test_library_path(tmp_path_factory):
 
 
 def test_script_runtime_error_exported():
-    pyjq.ScriptRuntimeError # exported
+    pyjq.ScriptRuntimeError  # exported
