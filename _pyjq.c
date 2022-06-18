@@ -7,6 +7,9 @@
 #elif PY_VERSION_HEX < 0x02060000 || (0x03000000 <= PY_VERSION_HEX && PY_VERSION_HEX < 0x03030000)
     #error Cython requires Python 2.6+ or Python 3.3+.
 #else
+#if PY_VERSION_HEX < 0x030900A4
+#  define Py_SET_REFCNT(obj, refcnt) ((Py_REFCNT(obj) = (refcnt)), (void)0)
+#endif
 #define CYTHON_ABI "0_29_13"
 #define CYTHON_HEX_VERSION 0x001D0DF0
 #define CYTHON_FUTURE_DIVISION 1
@@ -3793,9 +3796,9 @@ static void __pyx_tp_dealloc_5_pyjq_Script(PyObject *o) {
   {
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
-    ++Py_REFCNT(o);
+    Py_SET_REFCNT(o, Py_REFCNT(o)+1);
     __pyx_pw_5_pyjq_6Script_3__dealloc__(o);
-    --Py_REFCNT(o);
+    Py_SET_REFCNT(o, Py_REFCNT(o)-1);
     PyErr_Restore(etype, eval, etb);
   }
   Py_CLEAR(p->_errors);
