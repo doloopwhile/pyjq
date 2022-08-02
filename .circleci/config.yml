@@ -8,6 +8,7 @@ workflows:
       - test38
       - test39
       - test310
+      - style
 
 jobs:
   test37:
@@ -41,3 +42,12 @@ jobs:
       - checkout
       - run: pip install --user tox
       - run: tox -e py310
+
+  style:
+    docker:
+      - image: circleci/python:3.10
+    steps:
+      - checkout
+      - run: pip install --user pipenv
+      - run: pipenv install --dev
+      - run: pipenv run black --check .
