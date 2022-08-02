@@ -38,12 +38,20 @@ class build_ext(_build_ext):
 
         self._extract_tarball(onig_tarball_path, dependencies_dir_path)
         for f in Path(onig_source_path).glob("src/*.py"):
-            lib2to3.main.main("lib2to3.fixes", args=["-w", "--no-diffs", "-f", "print", str(f)])
+            lib2to3.main.main(
+                "lib2to3.fixes", args=["-w", "--no-diffs", "-f", "print", str(f)]
+            )
 
         self._build_lib(
             lib_dir=onig_source_path,
             commands=[
-                ["./configure", "CFLAGS=-fPIC", "--disable-shared", "--prefix", onig_install_path],
+                [
+                    "./configure",
+                    "CFLAGS=-fPIC",
+                    "--disable-shared",
+                    "--prefix",
+                    onig_install_path,
+                ],
                 ["make"],
                 ["make", "install"],
             ],

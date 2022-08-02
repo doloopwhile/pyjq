@@ -36,7 +36,9 @@ def default_opener(url):
 def _get_value(value, url, opener):
     if url is not None:
         if value is not None:
-            raise TypeError("'value' and 'url' are not able to specified at the same time")
+            raise TypeError(
+                "'value' and 'url' are not able to specified at the same time"
+            )
         return opener(url)
     return value
 
@@ -48,7 +50,9 @@ def all(script, value=None, vars={}, url=None, opener=default_opener, library_pa
     return compile(script, vars, library_paths).all(_get_value(value, url, opener))
 
 
-def apply(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def apply(
+    script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]
+):
     """
     Transform value by script, returning all results as list.
     """
@@ -58,12 +62,22 @@ def apply(script, value=None, vars={}, url=None, opener=default_opener, library_
 apply.__doc__ = all.__doc__
 
 
-def first(script, value=None, default=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def first(
+    script,
+    value=None,
+    default=None,
+    vars={},
+    url=None,
+    opener=default_opener,
+    library_paths=[],
+):
     """
     Transform object by jq script, returning the first result.
     Return default if result is empty.
     """
-    return compile(script, vars, library_paths).first(_get_value(value, url, opener), default)
+    return compile(script, vars, library_paths).first(
+        _get_value(value, url, opener), default
+    )
 
 
 def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):

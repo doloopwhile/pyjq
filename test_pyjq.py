@@ -27,7 +27,10 @@ def test_syntax_error():
 
 
 def test_non_json_data():
-    with pytest.raises(TypeError, match=re.escape("<class 'datetime.datetime'> could not be converted to json")):
+    with pytest.raises(
+        TypeError,
+        match=re.escape("<class 'datetime.datetime'> could not be converted to json"),
+    ):
         pyjq.all(".", {"date": datetime.now()})
 
 
@@ -61,12 +64,18 @@ def test_assigning_values():
 
 
 def test_all():
-    assert pyjq.all(".[] | . + $foo", ["val1", "val2"], vars=dict(foo="bar")) == ["val1bar", "val2bar"]
+    assert pyjq.all(".[] | . + $foo", ["val1", "val2"], vars=dict(foo="bar")) == [
+        "val1bar",
+        "val2bar",
+    ]
     assert pyjq.all(". + $foo", "val", vars=dict(foo="bar")) == ["valbar"]
 
 
 def test_first():
-    assert pyjq.first(".[] | . + $foo", ["val1", "val2"], vars=dict(foo="bar")) == "val1bar"
+    assert (
+        pyjq.first(".[] | . + $foo", ["val1", "val2"], vars=dict(foo="bar"))
+        == "val1bar"
+    )
 
 
 def test_one():
@@ -90,7 +99,11 @@ def test_url_argument():
             return '["Hello", "世界", "！"]'.encode("shift-jis")
 
     with patch("urllib.request.urlopen", return_value=FakeResponse()):
-        assert pyjq.all(".[] | . + .", url="http://example.com") == ["HelloHello", "世界世界", "！！"]
+        assert pyjq.all(".[] | . + .", url="http://example.com") == [
+            "HelloHello",
+            "世界世界",
+            "！！",
+        ]
 
     def opener(url):
         return [1, 2, 3]
@@ -113,9 +126,16 @@ def test_library_path(tmp_path_factory):
     values = pyjq.all(
         'include "greeting"; include "increment"; .[] | [. | increment, hello, world]',
         [1, 2, 3],
-        library_paths=[str(library_path), library_path2],  # It accepts both of str and pathlib.Path
+        library_paths=[
+            str(library_path),
+            library_path2,
+        ],  # It accepts both of str and pathlib.Path
     )
-    assert [[2, "HELLO", "WORLD"], [3, "HELLO", "WORLD"], [4, "HELLO", "WORLD"]] == values
+    assert [
+        [2, "HELLO", "WORLD"],
+        [3, "HELLO", "WORLD"],
+        [4, "HELLO", "WORLD"],
+    ] == values
 
 
 def test_script_runtime_error_exported():
