@@ -7,6 +7,7 @@ workflows:
       - test37
       - test38
       - test39
+      - test310
 
 jobs:
   test37:
@@ -32,3 +33,11 @@ jobs:
       - checkout
       - run: pip install --user tox
       - run: tox -e py39
+
+  test310:
+    docker:
+      - image: circleci/python:3.10
+    steps:
+      - checkout
+      - run: pip install --user tox
+      - run: tox -e py310
