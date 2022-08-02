@@ -2,7 +2,7 @@
 pyjq = {editable = true, path = "."}
 
 [dev-packages]
-cython = ">=0.29.26"
+cython = "~=0.29.26"
 twine = "*"
 pytest = "*"
 mypy = "*"
