@@ -1,15 +1,15 @@
 [packages]
-pyjq = {editable = true,path = "."}
+pyjq = {editable = true, path = "."}
 
 [dev-packages]
-cython = "*"
+cython = "~=0.29.26"
 twine = "*"
 pytest = "*"
 mypy = "*"
 black = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"
 
 [pipenv]
 allow_prereleases = true
