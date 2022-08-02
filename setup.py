@@ -37,8 +37,8 @@ class build_ext(_build_ext):
         self._safe_rmtree(onig_source_path)
 
         self._extract_tarball(onig_tarball_path, dependencies_dir_path)
-        for f in Path(onig_source_path).glob('src/*.py'):
-            lib2to3.main.main("lib2to3.fixes", args=['-w', '--no-diffs', '-f', 'print', str(f)])
+        for f in Path(onig_source_path).glob("src/*.py"):
+            lib2to3.main.main("lib2to3.fixes", args=["-w", "--no-diffs", "-f", "print", str(f)])
 
         self._build_lib(
             lib_dir=onig_source_path,
@@ -46,7 +46,7 @@ class build_ext(_build_ext):
                 ["./configure", "CFLAGS=-fPIC", "--disable-shared", "--prefix", onig_install_path],
                 ["make"],
                 ["make", "install"],
-            ]
+            ],
         )
 
     def _build_libjq(self):
@@ -58,17 +58,24 @@ class build_ext(_build_ext):
             lib_dir=jq_source_path,
             commands=[
                 ["autoreconf", "-i"],
-                ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode",
-                 "--enable-all-static", "--disable-shared",
-                 "--with-oniguruma=" + onig_install_path, "--prefix", jq_install_path],
+                [
+                    "./configure",
+                    "CFLAGS=-fPIC",
+                    "--disable-maintainer-mode",
+                    "--enable-all-static",
+                    "--disable-shared",
+                    "--with-oniguruma=" + onig_install_path,
+                    "--prefix",
+                    jq_install_path,
+                ],
                 ["make", "install-libLTLIBRARIES", "install-includeHEADERS"],
-            ]
+            ],
         )
 
     def _build_lib(self, lib_dir, commands):
         macosx_deployment_target = sysconfig.get_config_var("MACOSX_DEPLOYMENT_TARGET")
         if macosx_deployment_target:
-            os.environ['MACOSX_DEPLOYMENT_TARGET'] = str(macosx_deployment_target)
+            os.environ["MACOSX_DEPLOYMENT_TARGET"] = str(macosx_deployment_target)
 
         for command in commands:
             subprocess.check_call(command, cwd=lib_dir)
@@ -82,8 +89,9 @@ class build_ext(_build_ext):
         except OSError:
             pass
 
+
 libraries = ["jq", "onig"]
-if platform.architecture()[1] == 'WindowsPE':
+if platform.architecture()[1] == "WindowsPE":
     libraries.append("shlwapi")
 
 pyjq = Extension(
@@ -91,11 +99,11 @@ pyjq = Extension(
     sources=["_pyjq.c"],
     include_dirs=["dependencies/jq_install/include"],
     libraries=libraries,
-    library_dirs=["dependencies/jq_install/lib", "dependencies/onig_install/lib"]
+    library_dirs=["dependencies/jq_install/lib", "dependencies/onig_install/lib"],
 )
 
 setup(
     ext_modules=[pyjq],
     cmdclass={"build_ext": build_ext},
-    package_data={'': [onig_tarball_path, jq_tarball_path]},
+    package_data={"": [onig_tarball_path, jq_tarball_path]},
 )
