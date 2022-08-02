@@ -14,8 +14,8 @@ pyjq is a Python bindings for jq (<http://stedolan.github.io/jq/>).
 You can seamlessly call jq script (like regular expression) and process
 a plain python data structure.
 
-For your information, <https://pypi.python.org/pypi/jq> is a also jq
-bindings but different and incompatible with pyjq.
+For your information, <https://pypi.python.org/pypi/jq> is another jq
+binding which is different and incompatible with pyjq.
 
 Example
 -------
