@@ -148,44 +148,6 @@ Author
 
 License
 -------
-
-Released under the MIT license. See LICENSE for details.
-
-Development
------------
-
-## Pipenv
-
-This project uses [Pipenv](https://docs.pipenv.org/en/latest/) to manage dependencies.
-
-Please install development tools with the following command:
-
-```shell
-pipenv install --dev
-```
-
-## Test
-
-We can run the tests with `tox`.
-
-```shell
-pipenv run pytest --doctest-modules --ignore-glob='dependencies/**/*.py'
-```
-
-On pull request, Tox is executed in Circle CI.
-
-## We DO commit `_pyjq.c`
-
-When you edit `_pyjq.pyx`, you need to run `pipenv run cython _pyjq.pyx` before you run `pipenv run python setup.py develop`.
-You need to do this because `setup.py` in this project does not compile `.pyx` to `.c` .
-
-Of course, we can use `Cython.Build.cythonize` in `setup.py` to automatically compile `.pyx` to `.c` .
-But, it causes a bootstrap problem in ``pip install``.
-
-So, we DO commit both of `_pyjq.pyx` and `_pyjq.c`.
-
-License
--------
 MIT License. See [LICENSE](./LICENSE).
 
 This package includes [jq](https://github.com/stedolan/jq) and [oniguruma](https://github.com/kkos/oniguruma). Their license files are included in their respective archive files.
