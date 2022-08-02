@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+### 2.6.0
+
+- Supports 3.10
+
 ### 2.5.1
 
 - Fixed typo.
