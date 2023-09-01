@@ -1,3 +1,4 @@
+import inspect
 import json
 import re
 import urllib
@@ -8,14 +9,20 @@ import _pyjq
 ScriptRuntimeError = _pyjq.ScriptRuntimeError
 
 
-def compile(script, vars={}, library_paths=[]):
+def _caller_globals(globals=None):
+    calling_frame = inspect.currentframe().f_back.f_back
+    return calling_frame.f_globals
+
+
+def compile(script, vars={}, library_paths=[], globals=None):
     """
     Compile a jq script, retuning a script object.
 
     library_paths is a list of strings that defines the module search path.
     """
 
-    return _pyjq.Script(script.encode("utf-8"), vars=vars, library_paths=library_paths)
+    globals = globals or _caller_globals()
+    return _pyjq.Script(script.encode("utf-8"), vars=vars, library_paths=library_paths, globals=globals)
 
 
 def default_opener(url):
@@ -43,11 +50,12 @@ def _get_value(value, url, opener):
     return value
 
 
-def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def all(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], globals=None):
     """
     Transform value by script, returning all results as list.
     """
-    return compile(script, vars, library_paths).all(_get_value(value, url, opener))
+    globals = globals or _caller_globals()
+    return compile(script, vars, library_paths, globals).all(_get_value(value, url, opener))
 
 
 def apply(
@@ -70,19 +78,22 @@ def first(
     url=None,
     opener=default_opener,
     library_paths=[],
+    globals=None,
 ):
     """
     Transform object by jq script, returning the first result.
     Return default if result is empty.
     """
-    return compile(script, vars, library_paths).first(
+    globals = globals or _caller_globals()
+    return compile(script, vars, library_paths, globals).first(
         _get_value(value, url, opener), default
     )
 
 
-def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[]):
+def one(script, value=None, vars={}, url=None, opener=default_opener, library_paths=[], globals=None):
     """
     Transform object by jq script, returning the first result.
     Raise ValueError unless results does not include exactly one element.
     """
-    return compile(script, vars, library_paths).one(_get_value(value, url, opener))
+    globals = globals or _caller_globals()
+    return compile(script, vars, library_paths, globals).one(_get_value(value, url, opener))

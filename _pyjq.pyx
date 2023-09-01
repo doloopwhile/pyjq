@@ -4,7 +4,8 @@ Python binding for jq
 """
 
 import os
-
+import dataclasses
+import inspect
 
 class ScriptRuntimeError(Exception):
     """
@@ -91,7 +92,7 @@ cdef extern from "jq.h":
     void jq_set_error_cb(jq_state *, jq_err_cb, void *)
 
 
-cdef object jv_to_pyobj(jv jval):
+cdef object jv_to_pyobj(jv jval, dict globals):
     kind = jv_get_kind(jval)
 
     if kind == JV_KIND_NULL:
@@ -111,7 +112,7 @@ cdef object jv_to_pyobj(jv jval):
         alist = []
         for i in range(jv_array_length(jv_copy(jval))):
             value = jv_array_get(jv_copy(jval), i)
-            alist.append(jv_to_pyobj(value))
+            alist.append(jv_to_pyobj(value, globals))
             jv_free(value)
         return alist
     elif kind == JV_KIND_OBJECT:
@@ -119,13 +120,17 @@ cdef object jv_to_pyobj(jv jval):
         it = jv_object_iter(jval)
         while jv_object_iter_valid(jval, it):
             key = jv_object_iter_key(jval, it)
-            k = jv_to_pyobj(key)
+            k = jv_to_pyobj(key, globals)
             jv_free(key)
             value = jv_object_iter_value(jval, it)
-            v = jv_to_pyobj(value)
+            v = jv_to_pyobj(value, globals)
             jv_free(value)
             adict[k] = v
             it = jv_object_iter_next(jval, it)
+        if "__class__" in adict:
+            class_name = adict.pop("__class__")
+            cls = globals[class_name]
+            return cls(**adict)
         return adict
 
 
@@ -151,6 +156,13 @@ cdef jv pyobj_to_jv(object pyobj) except *:
                 raise TypeError("Key of json object must be a str, but got {}".format(type(key)))
             jval = jv_object_set(jval, pyobj_to_jv(key), pyobj_to_jv(value))
         return jval
+    elif dataclasses.is_dataclass(pyobj):
+        asdict = {
+            f.name: getattr(pyobj, f.name)
+            for f in dataclasses.fields(pyobj)
+        }
+        asdict["__class__"] = pyobj.__class__.__name__
+        return pyobj_to_jv(asdict)
     elif pyobj is None:
         return jv_null()
     else:
@@ -165,13 +177,19 @@ cdef class Script:
     'Compiled jq script object'
     cdef object _errors
     cdef jq_state* _jq
+    cdef dict _globals
 
-    def __init__(self, const char* script, vars={}, library_paths=[]):
+    def __init__(self, const char* script, vars={}, library_paths=[], globals=None):
         self._errors = []
         self._jq = jq_init()
         if not self._jq:
             raise RuntimeError('Failed to initialize jq')
         jq_set_error_cb(self._jq, Script_error_cb, <void*>self)
+
+        if globals is None:
+            calling_frame = inspect.currentframe().f_back
+            globals = calling_frame.f_globals
+        self._globals = globals
 
         args = pyobj_to_jv([
             dict(name=k, value=v)
@@ -207,10 +225,10 @@ cdef class Script:
                     if not jv_invalid_has_msg(jv_copy(result)):
                         break
                     m = jv_invalid_get_msg(jv_copy(result))
-                    e = str(jv_to_pyobj(m))
+                    e = str(jv_to_pyobj(m, self._globals))
                     raise ScriptRuntimeError(e)
                 else:
-                    output.append(jv_to_pyobj(result))
+                    output.append(jv_to_pyobj(result, self._globals))
             finally:
                 jv_free(result)
         return output

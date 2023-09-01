@@ -7,6 +7,7 @@ import re
 import shutil
 import tempfile
 import unittest
+import dataclasses
 from datetime import datetime
 from unittest.mock import patch
 
@@ -14,6 +15,13 @@ import pytest
 
 import _pyjq
 import pyjq
+
+
+@dataclasses.dataclass
+class Data:
+    name: str
+    age: int
+    children: list["Data"] = dataclasses.field(default_factory=list)
 
 
 def test_compile_dot():
@@ -56,6 +64,19 @@ def test_conversion_between_python_object_and_jv():
     s = pyjq.compile(".")
     for obj in objects:
         assert [obj] == s.all(obj)
+
+
+def test_conversion_between_dataclass_and_jv():
+    obj = Data("bar", 10)
+    assert pyjq.compile(".").one(obj) == obj
+    assert pyjq.all(".", obj) == [obj]
+    assert pyjq.one(".", obj) == obj
+    assert pyjq.first(".", obj) == obj
+
+
+def test_conversion_between_complex_dataclass_and_jv():
+    obj = Data("foo", 20, children=[(Data("bar", 10))])
+    assert pyjq.one(".", obj) == obj
 
 
 def test_assigning_values():
