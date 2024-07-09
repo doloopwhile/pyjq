@@ -157,7 +157,7 @@ cdef jv pyobj_to_jv(object pyobj) except *:
         raise TypeError("{!r} could not be converted to json".format(type(pyobj)))
 
 
-cdef void Script_error_cb(void* x, jv err):
+cdef void Script_error_cb(void* x, jv err) noexcept:
     Script._error_cb(<object>x, err)
 
 
