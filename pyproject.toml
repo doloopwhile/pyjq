@@ -1,0 +1,31 @@
+[build-system]
+requires = [
+  "cython",
+  "setuptools >= 61.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyjq"
+version = "2.6.0"
+description = "Binding for jq JSON processor."
+readme = "README.md"
+keywords = ["jq"]
+license = {text = "MIT License"}
+authors = [{ name = "Omoto Kenji" } ]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: JavaScript",
+    ]
+
+[project.urls]
+Repository = "http://github.com/doloopwhile/pyjq"

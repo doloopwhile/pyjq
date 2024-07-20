@@ -39,8 +39,9 @@ Example
 Install
 -------
 
-You will need flex, bison (3.0 or newer), libtool, make, automake and autoconf to build jq.
-Install them by Homebrew, APT or other way.
+You will need flex, bison (3.0 or newer), libtool, make, automake,
+autoconf, libjq-dev and libonig-dev to build pyjq.  Install them by
+Homebrew, APT or other way.
 
 You can install from PyPI by usual way.
 

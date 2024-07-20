@@ -2,14 +2,12 @@
 pyjq = {editable = true, path = "."}
 
 [dev-packages]
-cython = "~=0.29.26"
-twine = "*"
-pytest = "*"
-mypy = "*"
 black = "*"
-
-[requires]
-python_version = "3.10"
+cython = "~=3.0"
+mypy = "*"
+pytest = "*"
+setuptools = "*"
+twine = "*"
 
 [pipenv]
 allow_prereleases = true
